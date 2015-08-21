@@ -33,15 +33,15 @@ namespace PublicApiWriter
         {
             if (m_SymbolAccessibility >= accessibility)
             {
-                await file.WriteLineAsync(Signature);
-            }
+                file.WriteLine(Signature);
 
-            if (recurse)
-            {
-                var indentedTextWriter = new IndentedTextWriter(file, " ") {Indent = 2};
-                foreach (var member in m_Members)
+                if (recurse)
                 {
-                    await member.Write(indentedTextWriter, accessibility, cancellationToken);
+                    var indentedTextWriter = new IndentedTextWriter(file, " ") { Indent = 2 };
+                    foreach (var member in m_Members)
+                    {
+                        await member.Write(indentedTextWriter, accessibility, cancellationToken);
+                    }
                 }
             }
         }

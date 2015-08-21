@@ -51,10 +51,13 @@ namespace PublicApiWriter
                 var tree = await document.GetSyntaxTreeAsync(cancellationToken);
                 var root = await tree.GetRootAsync(cancellationToken);
                 var semantic = await document.GetSemanticModelAsync(cancellationToken);
-                var classes = root.DescendantNodes().OfType<ClassDeclarationSyntax>();
-                foreach (var classNode in classes)
+                var classes = root.ChildNodes();
+                var apiNodes = classes
+                    .Select(syntaxNode => semantic.GetDeclaredSymbol(syntaxNode))
+                    .Where(symbol => symbol != null)
+                    .Select(symbol => CreateApiNode(symbol, cancellationToken));
+                foreach (var child in apiNodes)
                 {
-                    var child = CreateApiNode(semantic.GetDeclaredSymbol(classNode) as ITypeSymbol, cancellationToken);
                     assemblyNode.AddMember(child);
                 }
             }
@@ -62,13 +65,10 @@ namespace PublicApiWriter
 
         private ApiNode CreateApiNode(ISymbol symbol, CancellationToken cancellationToken)
         {
-
             var symbolAccessibility = symbol.DeclaredAccessibility.ToString().ToLowerInvariant();
             var symbolNamespace = symbol.ContainingNamespace.Name;
-            var symbolName = symbol.MetadataName;
-            var symbolKind = symbol.Kind;
-            var extraInfo = GetAfterNameInfo(symbol);
-            var typeDescription = $"{symbolAccessibility} {symbolKind} {symbolNamespace}.{symbolName}{extraInfo}";
+            var symbolKind = symbol.Kind.ToString().ToLowerInvariant();
+            var typeDescription = $"{symbolAccessibility} {symbolKind} {symbol}";
             var apiNode = new ApiNode(typeDescription, symbolNamespace, symbol.DeclaredAccessibility);
             AddMembers(apiNode, symbol as INamespaceOrTypeSymbol, cancellationToken);
             return apiNode;
@@ -82,20 +82,6 @@ namespace PublicApiWriter
                 var childNode = CreateApiNode(childSymbol, cancellationToken);
                 parent.AddMember(childNode);
             }
-        }
-
-        private static string GetAfterNameInfo(ISymbol symbol)
-        {
-            if (symbol is ITypeSymbol) return GetAfterNameInfo((ITypeSymbol) symbol);
-            return "";
-        }
-
-        private static string GetAfterNameInfo(ITypeSymbol symbol)
-        {
-            var interfaces = symbol.AllInterfaces.Any()
-                ? ", " + string.Join(", ", symbol.AllInterfaces)
-                : "";
-            return $" : {symbol.BaseType}{interfaces}";
         }
     }
 }
