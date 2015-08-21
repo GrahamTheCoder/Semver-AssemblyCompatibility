@@ -15,11 +15,11 @@ namespace PublicApiWriter
         public ApiNode(string signature, string @namespace, Accessibility symbolAccessibility)
         {
             m_SymbolAccessibility = symbolAccessibility;
-            Qualifier = @namespace;
+            Namespace = @namespace;
             Signature = signature;
         }
 
-        public string Qualifier { get; }
+        public string Namespace { get; }
         public string Signature{ get; }
         public void AddMember(ApiNode member)
         {
@@ -29,9 +29,9 @@ namespace PublicApiWriter
         {
             return member.Contains(member);
         }
-        public async Task Write(TextWriter file, Accessibility accessibility, CancellationToken cancellationToken, bool recurse = true)
+        public async Task Write(TextWriter file, PrinterConfig printerConfig, CancellationToken cancellationToken, bool recurse = true)
         {
-            if (m_SymbolAccessibility >= accessibility)
+            if (printerConfig.ShouldPrint(Namespace, m_SymbolAccessibility))
             {
                 file.WriteLine(Signature);
 
@@ -40,7 +40,7 @@ namespace PublicApiWriter
                     var indentedTextWriter = new IndentedTextWriter(file, " ") { Indent = 2 };
                     foreach (var member in m_Members)
                     {
-                        await member.Write(indentedTextWriter, accessibility, cancellationToken);
+                        await member.Write(indentedTextWriter, printerConfig, cancellationToken);
                     }
                 }
             }

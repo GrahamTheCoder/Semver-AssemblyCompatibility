@@ -17,19 +17,19 @@ namespace PublicApiWriter
             m_Solution = solution;
         }
 
-        internal async Task WritePublicMembers(string outputFile, CancellationToken cancellationToken)
+        internal async Task WritePublicMembers(string outputFile, PrinterConfig printerConfig, CancellationToken cancellationToken)
         {
             var solutionNode = ReadProjects(cancellationToken);
-            await WritePublicApi(solutionNode, outputFile, cancellationToken);
+            await WritePublicApi(solutionNode, printerConfig, outputFile, cancellationToken);
         }
 
-        private async Task WritePublicApi(IEnumerable<ApiNode> assemblies, string outputFile, CancellationToken cancellationToken)
+        private async Task WritePublicApi(IEnumerable<ApiNode> assemblies, PrinterConfig printerConfig, string outputFile, CancellationToken cancellationToken)
         {
             using (var file = new StreamWriter(outputFile, false))
             {
                 foreach (var assembly in assemblies)
                 {
-                    await assembly.Write(file, Accessibility.Public, cancellationToken);
+                    await assembly.Write(file, printerConfig, cancellationToken);
                 }
             }
         }
