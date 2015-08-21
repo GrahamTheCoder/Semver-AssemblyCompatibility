@@ -3,9 +3,16 @@ Helps treat assembly compatibility as a semantically versioned interface. This i
 
 I have a powershell script which does a post-build check for this system on [Codeplex](https://hg.codeplex.com/forks/grahamhelliwell/diffonly). I'm essentially porting that system to Roslyn then extending it.
 
+Note that many changes *could* end up being a breaking change under various circumstances in a consuming project. This project aims to hit:
+* All cases that are guaranteed to break a consumer (e.g. removing a type that's used)
+* Zero of the cases where the consumer was using reflection to break accessibility rules
 
 #### Milestones
 * [ ] Use Roslyn to write out an assembly's public API
+  * [ ] Types (with base type and interface info)
+  * [ ] Methods and properties
+  * [ ] Delegates
+  * [ ] Events
 * [ ] Generate a semantic version based on the latest public API, it's verison and an unversioned public API
 * [ ] Generate a semantic version from a nuspec (by finding the included projects and versioning their APIs together)
 * [ ] Create a unit test to run locally which writes out the version to AssemblyInfo and Nuspec
