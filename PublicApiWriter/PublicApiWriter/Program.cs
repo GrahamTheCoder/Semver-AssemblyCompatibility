@@ -2,6 +2,7 @@ using System;
 using System.IO;
 using System.Linq;
 using System.Threading;
+using System.Threading.Tasks;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.MSBuild;
 
@@ -22,9 +23,13 @@ namespace PublicApiWriter
                 PrintUsage();
             }
 
-            var msWorkspace = MSBuildWorkspace.Create();
-            var solution = new ApiReader(msWorkspace.OpenSolutionAsync(solutionFilePath, cancellationToken).Result);
-            solution.WritePublicMembers(outputFile, printerConfig, cancellationToken).Wait(cancellationToken);
+            using (var msWorkspace = MSBuildWorkspace.Create())
+            {
+                var result = msWorkspace.OpenSolutionAsync(solutionFilePath, cancellationToken).Result;
+                var solution = new ApiReader(result);
+                var solutionNode = solution.ReadProjects(cancellationToken);
+                new PublicApiWriter(printerConfig).Write(solutionNode, outputFile, cancellationToken).Wait(cancellationToken);
+            }
         }
 
         private static void PrintUsage()

@@ -17,24 +17,7 @@ namespace PublicApiWriter
             m_Solution = solution;
         }
 
-        internal async Task WritePublicMembers(string outputFile, PrinterConfig printerConfig, CancellationToken cancellationToken)
-        {
-            var solutionNode = ReadProjects(cancellationToken);
-            await WritePublicApi(solutionNode, printerConfig, outputFile, cancellationToken);
-        }
-
-        private async Task WritePublicApi(IEnumerable<ApiNode> assemblies, PrinterConfig printerConfig, string outputFile, CancellationToken cancellationToken)
-        {
-            using (var file = new StreamWriter(outputFile, false))
-            {
-                foreach (var assembly in assemblies)
-                {
-                    await new ApiNodeWriter(printerConfig).Write(assembly, file, cancellationToken);
-                }
-            }
-        }
-
-        private IEnumerable<ApiNode> ReadProjects(CancellationToken token)
+        public IEnumerable<ApiNode> ReadProjects(CancellationToken token)
         {
             foreach (var project in m_Solution.Projects)
             {
