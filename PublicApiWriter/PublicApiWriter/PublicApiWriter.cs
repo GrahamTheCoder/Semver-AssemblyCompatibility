@@ -15,13 +15,13 @@ namespace PublicApiWriter
             m_ApiNodeWriter = new ApiNodeWriter(apiNodeWriter);
         }
 
-        public async Task Write(IEnumerable<ApiNode> assemblies, string outputFile, CancellationToken cancellationToken)
+        public async Task Write(IEnumerable<ApiNode> nodes, string outputFile, CancellationToken cancellationToken)
         {
             using (var file = new StreamWriter(outputFile, false))
             {
-                foreach (var assembly in assemblies)
+                foreach (var node in nodes)
                 {
-                    await m_ApiNodeWriter.Write(assembly, file, cancellationToken);
+                    await m_ApiNodeWriter.Write(node, file, cancellationToken);
                 }
             }
         }
