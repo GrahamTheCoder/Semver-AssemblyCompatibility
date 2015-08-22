@@ -48,6 +48,10 @@ namespace PublicApiWriter
             NamespacePrefixExcludes = semiColonSeparatedPrefixExcludes.Split(splitters, StringSplitOptions.RemoveEmptyEntries);
         }
 
+        public void set_Value(bool value)
+        {
+
+        }
         public bool ShouldPrint(string @namespace, Accessibility symbolAccessibility)
         {
             return symbolAccessibility >= Accessibility

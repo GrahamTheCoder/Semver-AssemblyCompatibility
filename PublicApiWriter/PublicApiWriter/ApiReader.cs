@@ -29,7 +29,7 @@ namespace PublicApiWriter
             {
                 foreach (var assembly in assemblies)
                 {
-                    await assembly.Write(file, printerConfig, cancellationToken);
+                    await new ApiNodeWriter(printerConfig).Write(assembly, file, cancellationToken);
                 }
             }
         }

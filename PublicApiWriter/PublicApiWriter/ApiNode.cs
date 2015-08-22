@@ -9,18 +9,20 @@ namespace PublicApiWriter
 {
     internal sealed class ApiNode
     {
-        private readonly Accessibility m_SymbolAccessibility;
         private readonly HashSet<ApiNode> m_Members = new HashSet<ApiNode>();
 
         public ApiNode(string signature, string @namespace, Accessibility symbolAccessibility)
         {
-            m_SymbolAccessibility = symbolAccessibility;
+            SymbolAccessibility = symbolAccessibility;
             Namespace = @namespace;
             Signature = signature;
         }
 
+        public string Signature { get; }
         public string Namespace { get; }
-        public string Signature{ get; }
+        public Accessibility SymbolAccessibility { get; }
+        public IEnumerable<ApiNode> Members => m_Members;
+
         public void AddMember(ApiNode member)
         {
             m_Members.Add(member);
@@ -28,22 +30,6 @@ namespace PublicApiWriter
         public bool Contains(ApiNode member)
         {
             return member.Contains(member);
-        }
-        public async Task Write(TextWriter file, PrinterConfig printerConfig, CancellationToken cancellationToken, bool recurse = true)
-        {
-            if (printerConfig.ShouldPrint(Namespace, m_SymbolAccessibility))
-            {
-                file.WriteLine(Signature);
-
-                if (recurse)
-                {
-                    var indentedTextWriter = new IndentedTextWriter(file, " ") { Indent = 2 };
-                    foreach (var member in m_Members)
-                    {
-                        await member.Write(indentedTextWriter, printerConfig, cancellationToken);
-                    }
-                }
-            }
         }
 
         #region Equality members for Signature

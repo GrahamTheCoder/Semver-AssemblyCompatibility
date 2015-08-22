@@ -104,6 +104,7 @@
   <ItemGroup>
     <Compile Include="ApiNode.cs" />
     <Compile Include="ApiReader.cs" />
+    <Compile Include="ApiNodeWriter.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
