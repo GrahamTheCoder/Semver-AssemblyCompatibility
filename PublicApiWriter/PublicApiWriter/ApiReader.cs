@@ -52,7 +52,7 @@ namespace PublicApiWriter
             var symbolNamespace = symbol.ContainingNamespace.Name;
             string signature = SymbolFormatter.GetSignature(symbol);
             var memberImportance = symbol.GetImportance();
-            var apiNode = assemblyNode.AddMember(signature, symbol.Name, symbolNamespace, symbol.DeclaredAccessibility, memberImportance);
+            var apiNode = assemblyNode.AddMember(signature, symbolNamespace, symbol.DeclaredAccessibility, symbol.Kind, symbol.Name, memberImportance);
             AddMembers(apiNode, symbol, cancellationToken);
             return apiNode;
         }

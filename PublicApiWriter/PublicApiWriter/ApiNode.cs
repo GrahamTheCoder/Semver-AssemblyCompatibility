@@ -9,11 +9,12 @@ namespace PublicApiWriter
     {
         private readonly ConcurrentDictionary<string, ApiNode> m_Members = new ConcurrentDictionary<string, ApiNode>();
 
-        public ApiNode(string signature, string name, string @namespace, Accessibility symbolAccessibility, int memberImportance = 0)
+        public ApiNode(string signature, string @namespace, Accessibility symbolAccessibility, SymbolKind kind, string name, int memberImportance = 0)
         {
-            SymbolAccessibility = symbolAccessibility;
-            Namespace = @namespace;
             Signature = signature;
+            Namespace = @namespace;
+            SymbolAccessibility = symbolAccessibility;
+            Kind = kind;
             Name = name;
             Importance = memberImportance;
         }
@@ -22,20 +23,22 @@ namespace PublicApiWriter
         /// A higher value indicates a more important member relative to its siblings
         /// </summary>
         public int Importance { get; }
+        public SymbolKind Kind { get; }
         public string Name { get; }
         public string Namespace { get; }
         public string Signature { get; }
         public Accessibility SymbolAccessibility { get; }
         public IEnumerable<ApiNode> Members => m_Members.Values.ToList();
 
+
         public static ApiNode CreateAssemblyRoot(string assemblyName)
         {
-            return new ApiNode("assembly " + assemblyName, assemblyName, assemblyName, Accessibility.Public);
+            return new ApiNode("assembly " + assemblyName, assemblyName, Accessibility.Public, SymbolKind.Assembly, assemblyName);
         }
 
-        public ApiNode AddMember(string signature, string name, string @namespace, Accessibility symbolAccessibility, int memberImportance)
+        public ApiNode AddMember(string signature, string @namespace, Accessibility symbolAccessibility, SymbolKind kind, string name, int memberImportance)
         {
-            return m_Members.GetOrAdd(signature, new ApiNode(signature, name, @namespace, symbolAccessibility, memberImportance));
+            return m_Members.GetOrAdd(signature, new ApiNode(signature, @namespace, symbolAccessibility, kind, name, memberImportance));
         }
 
         public bool Contains(ApiNode member)
