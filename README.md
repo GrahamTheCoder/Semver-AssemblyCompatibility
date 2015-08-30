@@ -9,11 +9,12 @@ Note that many changes *could* end up being a breaking change under various circ
 
 #### Milestones
 * [ ] Use Roslyn to write out an assembly's public API
-  * [ ] Types (with base type and interface info)
-  * [ ] Methods and properties
-  * [ ] Delegates
-  * [ ] Events
-* [ ] Generate a semantic version based on the latest public API, it's verison and an unversioned public API
+  * [x] Types
+  * [x] Methods and properties
+  * [x] Events
+  * [x] Delegates
+  * [ ] Base type and interface info
+* [ ] Generate a semantic version based on (the latest public API, its verison, and an unversioned public API)
 * [ ] Generate a semantic version from a nuspec (by finding the included projects and versioning their APIs together)
 * [ ] Create a unit test to run locally which writes out the version to AssemblyInfo and Nuspec
 * [ ] Write guidance on setting up TeamCity to replace just build counter
