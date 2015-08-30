@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -35,24 +36,23 @@ namespace PublicApiWriter
                 var root = await tree.GetRootAsync(cancellationToken);
                 var semantic = await document.GetSemanticModelAsync(cancellationToken);
                 var classes = root.ChildNodes();
-                var apiNodes = classes
+                var semanticDocumentMembers = classes
                     .Select(syntaxNode => semantic.GetDeclaredSymbol(syntaxNode))
-                    .Where(symbol => symbol != null)
-                    .Select(symbol => CreateApiNode(symbol, cancellationToken));
-                foreach (var child in apiNodes)
+                    .Where(symbol => symbol != null);
+                foreach (var semanticDocSymbol in semanticDocumentMembers)
                 {
-                    assemblyNode.AddMember(child);
+                    CreateApiNode(assemblyNode, semanticDocSymbol, cancellationToken);
                 }
             }
         }
 
-        private ApiNode CreateApiNode(ISymbol symbol, CancellationToken cancellationToken)
+        private ApiNode CreateApiNode(ApiNode assemblyNode, ISymbol symbol, CancellationToken cancellationToken)
         {
             var symbolAccessibility = symbol.DeclaredAccessibility.ToString().ToLowerInvariant();
             var symbolNamespace = symbol.ContainingNamespace.Name;
             var symbolKind = symbol.Kind.ToString().ToLowerInvariant();
             var typeDescription = $"{symbolAccessibility} {symbolKind} {symbol}";
-            var apiNode = new ApiNode(typeDescription, symbolNamespace, symbol.DeclaredAccessibility);
+            var apiNode = assemblyNode.AddMember(typeDescription, symbolNamespace, symbol.DeclaredAccessibility);
             AddMembers(apiNode, symbol as INamespaceOrTypeSymbol, cancellationToken);
             return apiNode;
         }
@@ -62,8 +62,7 @@ namespace PublicApiWriter
             if (symbol == null) return;
             foreach (var childSymbol in symbol.GetMembers())
             {
-                var childNode = CreateApiNode(childSymbol, cancellationToken);
-                parent.AddMember(childNode);
+                var childNode = CreateApiNode(parent, childSymbol, cancellationToken);
             }
         }
     }
