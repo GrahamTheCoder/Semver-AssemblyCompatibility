@@ -51,11 +51,16 @@ namespace PublicApiWriter
         private ApiNode CreateApiNode(ApiNode assemblyNode, ISymbol symbol, CancellationToken cancellationToken)
         {
             var symbolNamespace = symbol.ContainingNamespace.Name;
-            string symbolDescription = SymbolDisplay.ToDisplayString(symbol, s_Format);
+            string signature = GetSignature(symbol);
             var memberImportance = GetImportance(assemblyNode, symbol);
-            var apiNode = assemblyNode.AddMember(symbolDescription, symbol.Name, symbolNamespace, symbol.DeclaredAccessibility, memberImportance);
+            var apiNode = assemblyNode.AddMember(signature, symbol.Name, symbolNamespace, symbol.DeclaredAccessibility, memberImportance);
             AddMembers(apiNode, symbol as INamespaceOrTypeSymbol, cancellationToken);
             return apiNode;
+        }
+
+        private static string GetSignature(ISymbol symbol)
+        {
+            return SymbolDisplay.ToDisplayString(symbol, s_Format);
         }
 
         private static int GetImportance(ApiNode assemblyNode, ISymbol symbol)
@@ -97,10 +102,15 @@ namespace PublicApiWriter
         private void AddMembers(ApiNode parent, INamespaceOrTypeSymbol symbol, CancellationToken cancellationToken)
         {
             if (symbol == null) return;
-            foreach (var childSymbol in symbol.GetMembers())
+            foreach (var childSymbol in GetMembers(symbol))
             {
                 var childNode = CreateApiNode(parent, childSymbol, cancellationToken);
             }
+        }
+
+        private static IEnumerable<ISymbol> GetMembers(INamespaceOrTypeSymbol symbol)
+        {
+            return symbol.GetMembers();
         }
     }
 }
