@@ -68,8 +68,8 @@ namespace PublicApiWriter
             var method = symbol as IMethodSymbol;
             var methodKindsByIncreasingImportance = new List<bool>
             {
-                method?.MethodKind == MethodKind.EventRemove || method?.MethodKind == MethodKind.EventAdd,
-                method?.MethodKind == MethodKind.PropertySet || method?.MethodKind == MethodKind.PropertyGet,
+                symbol is IEventSymbol,
+                symbol is IPropertySymbol,
                 method?.MethodKind == MethodKind.Destructor,
                 method?.MethodKind == MethodKind.Constructor,
                 method?.MethodKind == MethodKind.StaticConstructor,
@@ -110,7 +110,11 @@ namespace PublicApiWriter
 
         private static IEnumerable<ISymbol> GetMembers(INamespaceOrTypeSymbol symbol)
         {
-            return symbol.GetMembers();
+            return from member in symbol.GetMembers()
+                   let methodKind = (member as IMethodSymbol)?.MethodKind
+                   where methodKind != MethodKind.PropertyGet && methodKind != MethodKind.PropertySet
+                   where methodKind != MethodKind.EventAdd && methodKind != MethodKind.EventRemove
+                   select member;
         }
     }
 }
