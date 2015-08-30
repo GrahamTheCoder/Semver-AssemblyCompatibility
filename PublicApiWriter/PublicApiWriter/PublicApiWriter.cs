@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Runtime.Remoting.Messaging;
 using System.Threading;
 using System.Threading.Tasks;
@@ -19,7 +20,7 @@ namespace PublicApiWriter
         {
             using (var file = new StreamWriter(outputFile, false))
             {
-                foreach (var node in nodes)
+                foreach (var node in nodes.OrderBy(n => n.Name))
                 {
                     await m_ApiNodeWriter.Write(node, file, cancellationToken);
                 }

@@ -24,7 +24,7 @@ namespace PublicApiWriter
         {
             foreach (var project in m_Solution.Projects)
             {
-                var assemblyNode = new ApiNode("assembly " + project.AssemblyName, project.AssemblyName, Accessibility.Public);
+                var assemblyNode = ApiNode.CreateAssemblyRoot(project.AssemblyName);
                 AddTypes(project, assemblyNode, token).Wait(token);
                 yield return assemblyNode;
             }
@@ -52,9 +52,35 @@ namespace PublicApiWriter
         {
             var symbolNamespace = symbol.ContainingNamespace.Name;
             string symbolDescription = SymbolDisplay.ToDisplayString(symbol, s_Format);
-            var apiNode = assemblyNode.AddMember(symbolDescription, symbolNamespace, symbol.DeclaredAccessibility);
+            var memberImportance = GetImportance(assemblyNode, symbol);
+            var apiNode = assemblyNode.AddMember(symbolDescription, symbol.Name, symbolNamespace, symbol.DeclaredAccessibility, memberImportance);
             AddMembers(apiNode, symbol as INamespaceOrTypeSymbol, cancellationToken);
             return apiNode;
+        }
+
+        private static int GetImportance(ApiNode assemblyNode, ISymbol symbol)
+        {
+            var method = symbol as IMethodSymbol;
+            var methodKindsByIncreasingImportance = new List<bool>
+            {
+                method?.MethodKind == MethodKind.EventRemove || method?.MethodKind == MethodKind.EventAdd,
+                method?.MethodKind == MethodKind.PropertySet || method?.MethodKind == MethodKind.PropertyGet,
+                method?.MethodKind == MethodKind.Destructor,
+                method?.MethodKind == MethodKind.Constructor,
+                method?.MethodKind == MethodKind.StaticConstructor,
+            };
+
+            var type = symbol as ITypeSymbol;
+            var typeKindsByIncreasingImportance = new List<TypeKind?>
+            {
+                TypeKind.Class,
+                TypeKind.Enum,
+                TypeKind.Struct,
+                TypeKind.Interface,
+            };
+
+            return methodKindsByIncreasingImportance.IndexOf(true)
+                + typeKindsByIncreasingImportance.IndexOf(type?.TypeKind);
         }
 
         private static SymbolDisplayFormat CreateFormat()

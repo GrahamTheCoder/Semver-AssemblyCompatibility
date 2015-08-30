@@ -1,3 +1,4 @@
+using System;
 using System.CodeDom.Compiler;
 using System.IO;
 using System.Linq;
@@ -24,7 +25,8 @@ namespace PublicApiWriter
                 if (recurse)
                 {
                     var indentedTextWriter = new IndentedTextWriter(file, " ") { Indent = 2 };
-                    foreach (var member in apiNode.Members)
+                    var orderedMembers = apiNode.Members.OrderByDescending(m => m.Importance).ThenBy(m => m.Name);
+                    foreach (var member in orderedMembers)
                     {
                         await Write(member, indentedTextWriter, cancellationToken);
                     }
