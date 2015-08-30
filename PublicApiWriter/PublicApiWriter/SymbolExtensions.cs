@@ -16,7 +16,9 @@ namespace PublicApiWriter
         {
             int typeImportance = GetTypeImportance(symbol);
             int methodLikeMemberImportance = GetMethodLikeMemberImportance(symbol);
-            return typeImportance + methodLikeMemberImportance;
+            int fieldImportance = GetFieldImportance(symbol);
+
+            return typeImportance + methodLikeMemberImportance + fieldImportance;
         }
 
         private static int GetTypeImportance(ISymbol symbol)
@@ -45,6 +47,17 @@ namespace PublicApiWriter
             };
             var methodImportance = methodPropertiesByIncreasingImportance.IndexOf(true);
             return methodImportance;
+        }
+
+        private static int GetFieldImportance(ISymbol symbol)
+        {
+            var field = symbol as IFieldSymbol;
+            var fieldKindsByImportance = new List<bool?>
+            {
+                field?.IsReadOnly,
+                field?.IsStatic,
+            };
+            return fieldKindsByImportance.IndexOf(true);
         }
     }
 }
