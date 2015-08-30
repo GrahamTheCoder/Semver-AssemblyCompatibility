@@ -66,11 +66,16 @@ namespace PublicApiWriter
 
         private void AddMembers(ApiNode parent, INamespaceOrTypeSymbol symbol, CancellationToken cancellationToken)
         {
-            if (symbol == null) return;
+            if (symbol == null || HasBoringAlwaysIdenticalMembers(symbol)) return;
             foreach (var childSymbol in GetMembers(symbol))
             {
                 var childNode = CreateApiNode(parent, childSymbol, cancellationToken);
             }
+        }
+
+        private static bool HasBoringAlwaysIdenticalMembers(INamespaceOrTypeSymbol symbol)
+        {
+            return (symbol as ITypeSymbol)?.TypeKind == TypeKind.Delegate;
         }
 
         private void AddEventMembers(ApiNode parent, IEventSymbol symbol, CancellationToken cancellationToken)
