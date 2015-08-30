@@ -5,6 +5,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.MSBuild;
+using System.Text.RegularExpressions;
 
 namespace PublicApiWriter
 {
@@ -14,9 +15,9 @@ namespace PublicApiWriter
         {
             var solutionFilePath = args.ElementAtOrDefault(0);
             var outputFile = args.ElementAtOrDefault(1) ?? "out.txt";
-            var namespacePrefixIncludes = (args.ElementAtOrDefault(2) ?? "");
-            var namespacePrefixExcludes = (args.ElementAtOrDefault(3) ?? "");
-            var printerConfig = new PrinterConfig(namespacePrefixIncludes, namespacePrefixExcludes);
+            var includeRegexes = (args.ElementAtOrDefault(2) ?? "");
+            var excludeRegexes = (args.ElementAtOrDefault(3) ?? "");
+            var printerConfig = new PrinterConfig(includeRegexes, excludeRegexes);
             var cancellationToken = new CancellationTokenSource().Token;
             if (string.IsNullOrEmpty(solutionFilePath) || !File.Exists(solutionFilePath))
             {
@@ -34,7 +35,7 @@ namespace PublicApiWriter
 
         private static void PrintUsage()
         {
-            Console.WriteLine("Usage: PublicApiWriter.exe solutionpath [output file path] [namespace prefix includes] [namespace prefix excludes]");
+            Console.WriteLine("Usage: PublicApiWriter.exe solutionpath [output file path] [include regexes] [exclude regexes]");
             Console.WriteLine("Example: PublicApiWriter.exe mySolution.sln ");
             Console.WriteLine("Example: PublicApiWriter.exe mySolution.sln out.txt MyApp;MyLibrary MyApp.Tests;MyLibrary.Tests");
         }
@@ -42,21 +43,17 @@ namespace PublicApiWriter
 
     internal class PrinterConfig
     {
-        public string[] NamespacePrefixIncludes { get; }
-        public string[] NamespacePrefixExcludes { get; }
+        public string[] IncludeSignatureRegexes { get; }
+        public string[] ExcludeSignatureRegexes { get; }
         public Accessibility Accessibility { get; } = Accessibility.Public;
 
-        public PrinterConfig(string semiColonSeparatedPrefixIncludes, string semiColonSeparatedPrefixExcludes)
+        public PrinterConfig(string semiColonSeparatedIncludeRegexes, string semiColonSeparatedExcludeRegexes)
         {
             var splitters = new[]{ ";" };
-            NamespacePrefixIncludes = semiColonSeparatedPrefixIncludes.Split(splitters, StringSplitOptions.RemoveEmptyEntries);
-            NamespacePrefixExcludes = semiColonSeparatedPrefixExcludes.Split(splitters, StringSplitOptions.RemoveEmptyEntries);
+            IncludeSignatureRegexes = semiColonSeparatedIncludeRegexes.Split(splitters, StringSplitOptions.RemoveEmptyEntries);
+            ExcludeSignatureRegexes = semiColonSeparatedExcludeRegexes.Split(splitters, StringSplitOptions.RemoveEmptyEntries);
         }
 
-        public void set_Value(bool value)
-        {
-
-        }
         public bool ShouldPrint(string @namespace, Accessibility symbolAccessibility)
         {
             return symbolAccessibility >= Accessibility
@@ -66,11 +63,12 @@ namespace PublicApiWriter
 
         private bool IsIncluded(string ns)
         {
-            return !NamespacePrefixIncludes.Any() || NamespacePrefixIncludes.Any(p => ns.StartsWith(p, StringComparison.OrdinalIgnoreCase));
+            return !IncludeSignatureRegexes.Any() || IncludeSignatureRegexes.Any(p => Regex.IsMatch(ns, p, RegexOptions.IgnoreCase));
         }
+
         private bool IsExcluded(string ns)
         {
-            return NamespacePrefixExcludes.Any(p => ns.StartsWith(p, StringComparison.OrdinalIgnoreCase));
+            return ExcludeSignatureRegexes.Any(p => Regex.IsMatch(ns, p, RegexOptions.IgnoreCase));
         }
     }
 }
