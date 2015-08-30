@@ -27,8 +27,8 @@ namespace PublicApiWriter
             var typeKindsByIncreasingImportance = new List<TypeKind?>
             {
                 TypeKind.Class,
-                TypeKind.Enum,
                 TypeKind.Struct,
+                TypeKind.Enum,
                 TypeKind.Interface,
             };
             return typeKindsByIncreasingImportance.IndexOf(type?.TypeKind);
