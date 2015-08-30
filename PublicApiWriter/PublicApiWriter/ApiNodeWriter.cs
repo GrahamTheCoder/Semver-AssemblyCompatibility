@@ -24,13 +24,18 @@ namespace PublicApiWriter
                 await file.WriteAsync(apiNode.Signature);
                 if (recurse)
                 {
-                    var indentedTextWriter = new IndentedTextWriter(file, " ") { Indent = 2 };
                     var orderedMembers = apiNode.Members.OrderByDescending(m => m.Importance).ThenBy(m => m.Name);
-                    foreach (var member in orderedMembers)
-                    {
-                        await Write(member, indentedTextWriter, cancellationToken);
-                    }
+                    await WriteMembersIndented(file, cancellationToken, orderedMembers);
                 }
+            }
+        }
+
+        private async Task WriteMembersIndented(TextWriter file, CancellationToken cancellationToken, IOrderedEnumerable<ApiNode> orderedMembers)
+        {
+            var indentedTextWriter = new IndentedTextWriter(file, " ") { Indent = 2 };
+            foreach (var member in orderedMembers)
+            {
+                await Write(member, indentedTextWriter, cancellationToken);
             }
         }
     }
