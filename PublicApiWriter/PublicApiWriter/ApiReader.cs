@@ -51,35 +51,10 @@ namespace PublicApiWriter
         {
             var symbolNamespace = symbol.ContainingNamespace.Name;
             string signature = SymbolFormatter.GetSignature(symbol);
-            var memberImportance = GetImportance(assemblyNode, symbol);
+            var memberImportance = symbol.GetImportance();
             var apiNode = assemblyNode.AddMember(signature, symbol.Name, symbolNamespace, symbol.DeclaredAccessibility, memberImportance);
             AddMembers(apiNode, symbol as INamespaceOrTypeSymbol, cancellationToken);
             return apiNode;
-        }
-
-        private static int GetImportance(ApiNode assemblyNode, ISymbol symbol)
-        {
-            var method = symbol as IMethodSymbol;
-            var methodKindsByIncreasingImportance = new List<bool>
-            {
-                symbol is IEventSymbol,
-                symbol is IPropertySymbol,
-                method?.MethodKind == MethodKind.Destructor,
-                method?.MethodKind == MethodKind.Constructor,
-                method?.MethodKind == MethodKind.StaticConstructor,
-            };
-
-            var type = symbol as ITypeSymbol;
-            var typeKindsByIncreasingImportance = new List<TypeKind?>
-            {
-                TypeKind.Class,
-                TypeKind.Enum,
-                TypeKind.Struct,
-                TypeKind.Interface,
-            };
-
-            return methodKindsByIncreasingImportance.IndexOf(true)
-                + typeKindsByIncreasingImportance.IndexOf(type?.TypeKind);
         }
 
         private void AddMembers(ApiNode parent, INamespaceOrTypeSymbol symbol, CancellationToken cancellationToken)
