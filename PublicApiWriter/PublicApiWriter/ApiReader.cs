@@ -12,7 +12,6 @@ namespace PublicApiWriter
 {
     internal class ApiReader
     {
-        private static SymbolDisplayFormat s_Format = CreateSignatureFormat();
         private readonly Solution m_Solution;
 
         public ApiReader(Solution solution)
@@ -51,16 +50,11 @@ namespace PublicApiWriter
         private ApiNode CreateApiNode(ApiNode assemblyNode, ISymbol symbol, CancellationToken cancellationToken)
         {
             var symbolNamespace = symbol.ContainingNamespace.Name;
-            string signature = GetSignature(symbol);
+            string signature = SymbolFormatter.GetSignature(symbol);
             var memberImportance = GetImportance(assemblyNode, symbol);
             var apiNode = assemblyNode.AddMember(signature, symbol.Name, symbolNamespace, symbol.DeclaredAccessibility, memberImportance);
             AddMembers(apiNode, symbol as INamespaceOrTypeSymbol, cancellationToken);
             return apiNode;
-        }
-
-        private static string GetSignature(ISymbol symbol)
-        {
-            return SymbolDisplay.ToDisplayString(symbol, s_Format);
         }
 
         private static int GetImportance(ApiNode assemblyNode, ISymbol symbol)
@@ -86,17 +80,6 @@ namespace PublicApiWriter
 
             return methodKindsByIncreasingImportance.IndexOf(true)
                 + typeKindsByIncreasingImportance.IndexOf(type?.TypeKind);
-        }
-
-        private static SymbolDisplayFormat CreateSignatureFormat()
-        {
-            var defaultFormat = SymbolDisplayFormat.CSharpErrorMessageFormat;
-            return
-                defaultFormat
-                .WithMemberOptions(SymbolDisplayMemberOptions.IncludeExplicitInterface | SymbolDisplayMemberOptions.IncludeParameters | SymbolDisplayMemberOptions.IncludeAccessibility | SymbolDisplayMemberOptions.IncludeModifiers | SymbolDisplayMemberOptions.IncludeType)
-                .WithKindOptions(SymbolDisplayKindOptions.IncludeMemberKeyword | SymbolDisplayKindOptions.IncludeNamespaceKeyword | SymbolDisplayKindOptions.IncludeTypeKeyword)
-                .WithGenericsOptions(SymbolDisplayGenericsOptions.IncludeTypeConstraints | SymbolDisplayGenericsOptions.IncludeTypeParameters | SymbolDisplayGenericsOptions.IncludeVariance)
-                .WithParameterOptions(SymbolDisplayParameterOptions.IncludeExtensionThis | SymbolDisplayParameterOptions.IncludeOptionalBrackets | SymbolDisplayParameterOptions.IncludeParamsRefOut | SymbolDisplayParameterOptions.IncludeType);
         }
 
         private void AddMembers(ApiNode parent, INamespaceOrTypeSymbol symbol, CancellationToken cancellationToken)
