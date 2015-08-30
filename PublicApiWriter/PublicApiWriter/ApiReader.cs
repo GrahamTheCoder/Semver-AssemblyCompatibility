@@ -6,11 +6,13 @@ using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
+using Microsoft.CodeAnalysis.CSharp;
 
 namespace PublicApiWriter
 {
     internal class ApiReader
     {
+        private static SymbolDisplayFormat s_Format = CreateFormat();
         private readonly Solution m_Solution;
 
         public ApiReader(Solution solution)
@@ -22,7 +24,7 @@ namespace PublicApiWriter
         {
             foreach (var project in m_Solution.Projects)
             {
-                var assemblyNode = new ApiNode(project.AssemblyName, "assembly", Accessibility.Public);
+                var assemblyNode = new ApiNode("assembly " + project.AssemblyName, project.AssemblyName, Accessibility.Public);
                 AddTypes(project, assemblyNode, token).Wait(token);
                 yield return assemblyNode;
             }
@@ -48,13 +50,21 @@ namespace PublicApiWriter
 
         private ApiNode CreateApiNode(ApiNode assemblyNode, ISymbol symbol, CancellationToken cancellationToken)
         {
-            var symbolAccessibility = symbol.DeclaredAccessibility.ToString().ToLowerInvariant();
             var symbolNamespace = symbol.ContainingNamespace.Name;
-            var symbolKind = symbol.Kind.ToString().ToLowerInvariant();
-            var typeDescription = $"{symbolAccessibility} {symbolKind} {symbol}";
-            var apiNode = assemblyNode.AddMember(typeDescription, symbolNamespace, symbol.DeclaredAccessibility);
+            string symbolDescription = SymbolDisplay.ToDisplayString(symbol, s_Format);
+            var apiNode = assemblyNode.AddMember(symbolDescription, symbolNamespace, symbol.DeclaredAccessibility);
             AddMembers(apiNode, symbol as INamespaceOrTypeSymbol, cancellationToken);
             return apiNode;
+        }
+
+        private static SymbolDisplayFormat CreateFormat()
+        {
+            var defaultFormat = SymbolDisplayFormat.CSharpErrorMessageFormat;
+            return
+                defaultFormat
+                .WithMemberOptions(SymbolDisplayMemberOptions.IncludeExplicitInterface | SymbolDisplayMemberOptions.IncludeParameters | SymbolDisplayMemberOptions.IncludeAccessibility | SymbolDisplayMemberOptions.IncludeModifiers | SymbolDisplayMemberOptions.IncludeType)
+                .WithKindOptions(SymbolDisplayKindOptions.IncludeMemberKeyword | SymbolDisplayKindOptions.IncludeNamespaceKeyword | SymbolDisplayKindOptions.IncludeTypeKeyword)
+                .WithGenericsOptions(SymbolDisplayGenericsOptions.IncludeTypeConstraints | SymbolDisplayGenericsOptions.IncludeTypeParameters | SymbolDisplayGenericsOptions.IncludeVariance);
         }
 
         private void AddMembers(ApiNode parent, INamespaceOrTypeSymbol symbol, CancellationToken cancellationToken)
