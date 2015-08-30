@@ -53,14 +53,40 @@ namespace PublicApiWriter
             string signature = SymbolFormatter.GetSignature(symbol);
             var memberImportance = symbol.GetImportance();
             var apiNode = assemblyNode.AddMember(signature, symbol.Name, symbolNamespace, symbol.DeclaredAccessibility, memberImportance);
-            AddMembers(apiNode, symbol as INamespaceOrTypeSymbol, cancellationToken);
+            AddMembers(apiNode, symbol, cancellationToken);
             return apiNode;
+        }
+
+        private void AddMembers(ApiNode parent, ISymbol symbol, CancellationToken cancellationToken)
+        {
+            AddMembers(parent, symbol as INamespaceOrTypeSymbol, cancellationToken);
+            AddEventMembers(parent, symbol as IEventSymbol, cancellationToken);
+            AddPropertyMembers(parent, symbol as IPropertySymbol, cancellationToken);
         }
 
         private void AddMembers(ApiNode parent, INamespaceOrTypeSymbol symbol, CancellationToken cancellationToken)
         {
             if (symbol == null) return;
             foreach (var childSymbol in GetMembers(symbol))
+            {
+                var childNode = CreateApiNode(parent, childSymbol, cancellationToken);
+            }
+        }
+
+        private void AddEventMembers(ApiNode parent, IEventSymbol symbol, CancellationToken cancellationToken)
+        {
+            if (symbol == null) return;
+            foreach (var childSymbol in new[] { symbol.AddMethod, symbol.RemoveMethod, symbol.RaiseMethod }.Where(x => x != null))
+            {
+                var childNode = CreateApiNode(parent, childSymbol, cancellationToken);
+            }
+        }
+
+
+        private void AddPropertyMembers(ApiNode parent, IPropertySymbol symbol, CancellationToken cancellationToken)
+        {
+            if (symbol == null) return;
+            foreach (var childSymbol in new[] { symbol.GetMethod, symbol.SetMethod }.Where(x => x != null))
             {
                 var childNode = CreateApiNode(parent, childSymbol, cancellationToken);
             }
