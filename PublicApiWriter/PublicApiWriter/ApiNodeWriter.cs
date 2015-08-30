@@ -1,5 +1,6 @@
 using System.CodeDom.Compiler;
 using System.IO;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -18,8 +19,8 @@ namespace PublicApiWriter
         {
             if (m_PrinterConfig.ShouldPrint(apiNode.Namespace, apiNode.SymbolAccessibility))
             {
-                await file.WriteLineAsync(apiNode.Signature);
-
+                file.WriteLine(); //Indentation is only correct after a newline (note: WriteLineAsync doesn't seem to do indentation at all)
+                await file.WriteAsync(apiNode.Signature);
                 if (recurse)
                 {
                     var indentedTextWriter = new IndentedTextWriter(file, " ") { Indent = 2 };
