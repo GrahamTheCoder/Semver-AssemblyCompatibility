@@ -8,18 +8,18 @@ Note that many changes *could* end up being a breaking change under various circ
 * Zero of the cases where the consumer was using reflection to break accessibility rules
 
 #### Milestones
-* [ ] Use Roslyn to write out an assembly's public API
+* [x] Use Roslyn to write out an assembly's public API
   * [x] Types
   * [x] Methods and properties
   * [x] Events
   * [x] Delegates
-  * [ ] Base type and interface info
+  * [x] Base type and interface info
 * [ ] Generate a semantic version based on (the latest public API, its verison, and an unversioned public API)
 * [ ] Generate a semantic version from a nuspec (by finding the included projects and versioning their APIs together)
 * [ ] Create a unit test to run locally which writes out the version to AssemblyInfo and Nuspec
 * [ ] Write guidance on setting up TeamCity to replace just build counter
 * [ ] Include powershell script to replace build counter on an arbitrary build system
-* [ ] Store something on GitHub, TC or Nuget to allow build counters to work on a per branch basis
+* [ ] Store something on GitHub, TC, the repo or Nuget to allow build counters to work on a per branch basis
 
 #### Future ideas
 Allow changes to be planned and enforced so that a number of breaking changes can be easily batched up.
