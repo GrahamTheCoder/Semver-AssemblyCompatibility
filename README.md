@@ -22,7 +22,11 @@ Note that many changes *could* end up being a breaking change under various circ
 * [ ] Store something on GitHub, TC, the repo or Nuget to allow build counters to work on a per branch basis
 
 #### Future ideas
-Allow changes to be planned and enforced so that a number of breaking changes can be easily batched up.
+##### Provide other version inputs and/or make inputs pluggable
+So that other things can be considered breaking changes. For example, scan the recorded output files for characterization tests for changes and allow those to cause minor/major version increase.
+
+##### Allow changes to be planned and enforced
+So that a number of breaking changes can be easily batched up.
 ```
 [UpcomingApi("9.0", ChangeType.Accessibility, Accessibility.Internal, Description = "Please use x instead", Level = WarnLevel.Warning)]
 [UpcomingApi("10.0", ChangeType.RenamedTo, "MyClass2")]
@@ -30,3 +34,5 @@ Allow changes to be planned and enforced so that a number of breaking changes ca
 ```
 These would appear as information items by default when used by consuming projects. For the source project, when the API is at or above the relevant version, a warning would be emitted (and there'd be a test method that could be used on build server before publishing).
 Could add "code fixes" in source and consuming solution for dealing with this change (a bit like Type Forwards but at a source level)
+
+
