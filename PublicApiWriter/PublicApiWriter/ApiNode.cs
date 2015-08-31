@@ -41,11 +41,6 @@ namespace PublicApiWriter
             return m_Members.GetOrAdd(signature, new ApiNode(signature, @namespace, symbolAccessibility, kind, name, memberImportance));
         }
 
-        public bool Contains(ApiNode member)
-        {
-            return member.Contains(member);
-        }
-
         public override string ToString()
         {
             return $"Signature: {Signature}, Importance: {Importance}, Namespace: {Namespace}, Member count: {Members.Count()}";
