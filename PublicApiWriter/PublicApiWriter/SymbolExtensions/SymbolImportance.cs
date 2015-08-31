@@ -1,13 +1,9 @@
 ﻿using Microsoft.CodeAnalysis;
-using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
-namespace PublicApiWriter
+namespace PublicApiWriter.SymbolExtensions
 {
-    internal static class SymbolExtensions
+    internal static class SymbolImportance
     {
         /// <summary>
         /// A higher value indicates a more important member relative to its siblings

@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.CodeAnalysis.CSharp;
+using PublicApiWriter.SymbolExtensions;
 
 namespace PublicApiWriter
 {
@@ -59,51 +60,10 @@ namespace PublicApiWriter
 
         private void AddMembers(ApiNode parent, ISymbol symbol, CancellationToken cancellationToken)
         {
-            AddMembers(parent, symbol as INamespaceOrTypeSymbol, cancellationToken);
-            AddEventMembers(parent, symbol as IEventSymbol, cancellationToken);
-            AddPropertyMembers(parent, symbol as IPropertySymbol, cancellationToken);
-        }
-
-        private void AddMembers(ApiNode parent, INamespaceOrTypeSymbol symbol, CancellationToken cancellationToken)
-        {
-            if (symbol == null || HasBoringAlwaysIdenticalMembers(symbol)) return;
-            foreach (var childSymbol in GetMembers(symbol))
+            foreach (var childSymbol in symbol.GetApiAffectingMembers())
             {
                 var childNode = CreateApiNode(parent, childSymbol, cancellationToken);
             }
-        }
-
-        private static bool HasBoringAlwaysIdenticalMembers(INamespaceOrTypeSymbol symbol)
-        {
-            return (symbol as ITypeSymbol)?.TypeKind == TypeKind.Delegate;
-        }
-
-        private void AddEventMembers(ApiNode parent, IEventSymbol symbol, CancellationToken cancellationToken)
-        {
-            if (symbol == null) return;
-            foreach (var childSymbol in new[] { symbol.AddMethod, symbol.RemoveMethod, symbol.RaiseMethod }.Where(x => x != null))
-            {
-                var childNode = CreateApiNode(parent, childSymbol, cancellationToken);
-            }
-        }
-
-
-        private void AddPropertyMembers(ApiNode parent, IPropertySymbol symbol, CancellationToken cancellationToken)
-        {
-            if (symbol == null) return;
-            foreach (var childSymbol in new[] { symbol.GetMethod, symbol.SetMethod }.Where(x => x != null))
-            {
-                var childNode = CreateApiNode(parent, childSymbol, cancellationToken);
-            }
-        }
-
-        private static IEnumerable<ISymbol> GetMembers(INamespaceOrTypeSymbol symbol)
-        {
-            return from member in symbol.GetMembers()
-                   let methodKind = (member as IMethodSymbol)?.MethodKind
-                   where methodKind != MethodKind.PropertyGet && methodKind != MethodKind.PropertySet
-                   where methodKind != MethodKind.EventAdd && methodKind != MethodKind.EventRemove
-                   select member;
         }
     }
 }

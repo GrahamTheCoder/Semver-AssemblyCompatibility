@@ -108,8 +108,9 @@
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="PublicApiWriter.cs" />
-    <Compile Include="SymbolFormatter.cs" />
-    <Compile Include="SymbolExtensions.cs" />
+    <Compile Include="SymbolExtensions\SymbolFormatter.cs" />
+    <Compile Include="SymbolExtensions\SymbolImportance.cs" />
+    <Compile Include="SymbolExtensions\SymbolMembers.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

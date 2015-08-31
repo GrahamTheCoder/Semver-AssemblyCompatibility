@@ -5,14 +5,13 @@ using static Microsoft.CodeAnalysis.SymbolDisplayKindOptions;
 using static Microsoft.CodeAnalysis.SymbolDisplayGenericsOptions;
 using static Microsoft.CodeAnalysis.SymbolDisplayParameterOptions;
 
-
-namespace PublicApiWriter
+namespace PublicApiWriter.SymbolExtensions
 {
     internal static class SymbolFormatter
     {
         private static SymbolDisplayFormat s_Format = CreateSignatureFormat();
 
-        public static string GetSignature(ISymbol symbol)
+        public static string GetSignature(this ISymbol symbol)
         {
             return SymbolDisplay.ToDisplayString(symbol, s_Format);
         }
