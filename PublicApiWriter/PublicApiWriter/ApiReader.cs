@@ -7,9 +7,9 @@ using System.Threading.Tasks;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.CodeAnalysis.CSharp;
-using PublicApiWriter.SymbolExtensions;
+using AssemblyApi.SymbolExtensions;
 
-namespace PublicApiWriter
+namespace AssemblyApi
 {
     internal class ApiReader
     {

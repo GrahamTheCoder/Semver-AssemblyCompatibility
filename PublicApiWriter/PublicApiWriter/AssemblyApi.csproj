@@ -8,8 +8,8 @@
     <ProjectGuid>{910019F8-C942-47F0-92BE-2B3E641B156D}</ProjectGuid>
     <OutputType>Exe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>PublicApiWriter</RootNamespace>
-    <AssemblyName>PublicApiWriter</AssemblyName>
+    <RootNamespace>AssemblyApi</RootNamespace>
+    <AssemblyName>AssemblyApi</AssemblyName>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>
@@ -104,10 +104,11 @@
   <ItemGroup>
     <Compile Include="ApiNode.cs" />
     <Compile Include="ApiReader.cs" />
-    <Compile Include="ApiNodeWriter.cs" />
+    <Compile Include="Output\ApiNodeWriter.cs" />
+    <Compile Include="Output\PrinterConfig.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="PublicApiWriter.cs" />
+    <Compile Include="Output\PublicApiWriter.cs" />
     <Compile Include="SymbolExtensions\SymbolFormatter.cs" />
     <Compile Include="SymbolExtensions\SymbolImportance.cs" />
     <Compile Include="SymbolExtensions\SymbolMembers.cs" />

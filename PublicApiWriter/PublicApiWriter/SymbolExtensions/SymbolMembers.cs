@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 
-namespace PublicApiWriter.SymbolExtensions
+namespace AssemblyApi.SymbolExtensions
 {
     internal static class SymbolMembers
     {

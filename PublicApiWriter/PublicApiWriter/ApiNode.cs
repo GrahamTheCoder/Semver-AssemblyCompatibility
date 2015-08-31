@@ -3,7 +3,7 @@ using Microsoft.CodeAnalysis;
 using System.Collections.Concurrent;
 using System.Linq;
 
-namespace PublicApiWriter
+namespace AssemblyApi
 {
     internal sealed class ApiNode
     {

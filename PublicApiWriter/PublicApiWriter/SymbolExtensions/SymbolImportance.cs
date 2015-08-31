@@ -2,7 +2,7 @@
 using System;
 using System.Collections.Generic;
 
-namespace PublicApiWriter.SymbolExtensions
+namespace AssemblyApi.SymbolExtensions
 {
     internal static class SymbolImportance
     {

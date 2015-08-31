@@ -6,7 +6,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using static Microsoft.CodeAnalysis.SymbolKind;
 
-namespace PublicApiWriter
+namespace AssemblyApi.Output
 {
     internal class ApiNodeWriter
     {

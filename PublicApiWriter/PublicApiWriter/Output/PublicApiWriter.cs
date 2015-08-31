@@ -1,11 +1,10 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Runtime.Remoting.Messaging;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace PublicApiWriter
+namespace AssemblyApi.Output
 {
     internal class PublicApiWriter
     {

@@ -2,12 +2,10 @@ using System;
 using System.IO;
 using System.Linq;
 using System.Threading;
-using System.Threading.Tasks;
-using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.MSBuild;
-using System.Text.RegularExpressions;
+using AssemblyApi.Output;
 
-namespace PublicApiWriter
+namespace AssemblyApi
 {
     class Program
     {
@@ -38,37 +36,6 @@ namespace PublicApiWriter
             Console.WriteLine("Usage: PublicApiWriter.exe solutionpath [output file path] [include regexes] [exclude regexes]");
             Console.WriteLine("Example: PublicApiWriter.exe mySolution.sln ");
             Console.WriteLine("Example: PublicApiWriter.exe mySolution.sln out.txt MyApp;MyLibrary MyApp.Tests;MyLibrary.Tests");
-        }
-    }
-
-    internal class PrinterConfig
-    {
-        public string[] IncludeSignatureRegexes { get; }
-        public string[] ExcludeSignatureRegexes { get; }
-        public Accessibility Accessibility { get; } = Accessibility.Public;
-
-        public PrinterConfig(string semiColonSeparatedIncludeRegexes, string semiColonSeparatedExcludeRegexes)
-        {
-            var splitters = new[]{ ";" };
-            IncludeSignatureRegexes = semiColonSeparatedIncludeRegexes.Split(splitters, StringSplitOptions.RemoveEmptyEntries);
-            ExcludeSignatureRegexes = semiColonSeparatedExcludeRegexes.Split(splitters, StringSplitOptions.RemoveEmptyEntries);
-        }
-
-        public bool ShouldPrint(string @namespace, Accessibility symbolAccessibility)
-        {
-            return (symbolAccessibility >= Accessibility || symbolAccessibility == Accessibility.NotApplicable)
-                   && IsIncluded(@namespace)
-                   && !IsExcluded(@namespace);
-        }
-
-        private bool IsIncluded(string ns)
-        {
-            return !IncludeSignatureRegexes.Any() || IncludeSignatureRegexes.Any(p => Regex.IsMatch(ns, p, RegexOptions.IgnoreCase));
-        }
-
-        private bool IsExcluded(string ns)
-        {
-            return ExcludeSignatureRegexes.Any(p => Regex.IsMatch(ns, p, RegexOptions.IgnoreCase));
         }
     }
 }

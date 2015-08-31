@@ -9,7 +9,7 @@ using System.Linq;
 using System.Collections.Immutable;
 using System.Collections.Generic;
 
-namespace PublicApiWriter.SymbolExtensions
+namespace AssemblyApi.SymbolExtensions
 {
     internal static class SymbolFormatter
     {
