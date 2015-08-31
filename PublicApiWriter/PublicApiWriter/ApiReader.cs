@@ -53,9 +53,16 @@ namespace PublicApiWriter
             var symbolNamespace = symbol.ContainingNamespace.Name;
             string signature = SymbolFormatter.GetSignature(symbol);
             var memberImportance = symbol.GetImportance();
-            var apiNode = assemblyNode.AddMember(signature, symbolNamespace, symbol.DeclaredAccessibility, symbol.Kind, symbol.Name, memberImportance);
+            var apiNode = assemblyNode.AddMember(signature, symbolNamespace, GetPresentedAccessibility(symbol), symbol.Kind, symbol.Name, memberImportance);
             AddMembers(apiNode, symbol, cancellationToken);
             return apiNode;
+        }
+
+        private static Accessibility GetPresentedAccessibility(ISymbol symbol)
+        {
+            return symbol.Kind == SymbolKind.Field && symbol.ContainingType.TypeKind == TypeKind.Enum
+                ? Accessibility.NotApplicable
+                : symbol.DeclaredAccessibility;
         }
 
         private void AddMembers(ApiNode parent, ISymbol symbol, CancellationToken cancellationToken)

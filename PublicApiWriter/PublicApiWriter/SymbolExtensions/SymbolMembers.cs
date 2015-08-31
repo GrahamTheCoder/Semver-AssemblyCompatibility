@@ -20,6 +20,7 @@ namespace PublicApiWriter.SymbolExtensions
                    let methodKind = (member as IMethodSymbol)?.MethodKind
                    where methodKind != MethodKind.PropertyGet && methodKind != MethodKind.PropertySet
                    where methodKind != MethodKind.EventAdd && methodKind != MethodKind.EventRemove
+                   where methodKind != MethodKind.Constructor || ((ITypeSymbol) symbol).TypeKind != TypeKind.Enum
                    select member;
         }
 

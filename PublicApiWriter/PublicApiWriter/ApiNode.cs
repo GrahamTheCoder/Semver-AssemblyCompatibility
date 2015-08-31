@@ -9,7 +9,7 @@ namespace PublicApiWriter
     {
         private readonly ConcurrentDictionary<string, ApiNode> m_Members = new ConcurrentDictionary<string, ApiNode>();
 
-        public ApiNode(string signature, string @namespace, Accessibility symbolAccessibility, SymbolKind kind, string name, int memberImportance = 0)
+        public ApiNode(string signature, string @namespace, Accessibility symbolAccessibility, SymbolKind kind, string name, long memberImportance = 0)
         {
             Signature = signature;
             Namespace = @namespace;
@@ -20,9 +20,9 @@ namespace PublicApiWriter
         }
 
         /// <summary>
-        /// A higher value indicates a more important member relative to its siblings
+        /// A lower value indicates a more important member relative to its siblings
         /// </summary>
-        public int Importance { get; }
+        public long Importance { get; }
         public SymbolKind Kind { get; }
         public string Name { get; }
         public string Namespace { get; }
@@ -36,7 +36,7 @@ namespace PublicApiWriter
             return new ApiNode("assembly " + assemblyName, assemblyName, Accessibility.Public, SymbolKind.Assembly, assemblyName);
         }
 
-        public ApiNode AddMember(string signature, string @namespace, Accessibility symbolAccessibility, SymbolKind kind, string name, int memberImportance)
+        public ApiNode AddMember(string signature, string @namespace, Accessibility symbolAccessibility, SymbolKind kind, string name, long memberImportance)
         {
             return m_Members.GetOrAdd(signature, new ApiNode(signature, @namespace, symbolAccessibility, kind, name, memberImportance));
         }

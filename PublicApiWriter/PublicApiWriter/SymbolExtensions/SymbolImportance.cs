@@ -1,4 +1,5 @@
 ﻿using Microsoft.CodeAnalysis;
+using System;
 using System.Collections.Generic;
 
 namespace PublicApiWriter.SymbolExtensions
@@ -8,16 +9,15 @@ namespace PublicApiWriter.SymbolExtensions
         /// <summary>
         /// A higher value indicates a more important member relative to its siblings
         /// </summary>
-        public static int GetImportance(this ISymbol symbol)
+        public static long GetImportance(this ISymbol symbol)
         {
-            int typeImportance = GetTypeImportance(symbol);
-            int methodLikeMemberImportance = GetMethodLikeMemberImportance(symbol);
-            int fieldImportance = GetFieldImportance(symbol);
-
+            long typeImportance = GetTypeImportance(symbol);
+            long methodLikeMemberImportance = GetMethodLikeMemberImportance(symbol);
+            long fieldImportance = GetFieldImportance(symbol);
             return typeImportance + methodLikeMemberImportance + fieldImportance;
         }
 
-        private static int GetTypeImportance(ISymbol symbol)
+        private static long GetTypeImportance(ISymbol symbol)
         {
             var type = symbol as ITypeSymbol;
             var typeKindsByIncreasingImportance = new List<TypeKind?>
@@ -27,10 +27,10 @@ namespace PublicApiWriter.SymbolExtensions
                 TypeKind.Enum,
                 TypeKind.Interface,
             };
-            return typeKindsByIncreasingImportance.IndexOf(type?.TypeKind);
+            return 1 - typeKindsByIncreasingImportance.IndexOf(type?.TypeKind);
         }
 
-        private static int GetMethodLikeMemberImportance(ISymbol symbol)
+        private static long GetMethodLikeMemberImportance(ISymbol symbol)
         {
             var method = symbol as IMethodSymbol;
             var methodPropertiesByIncreasingImportance = new List<bool>
@@ -41,11 +41,10 @@ namespace PublicApiWriter.SymbolExtensions
                 method?.MethodKind == MethodKind.Constructor,
                 method?.MethodKind == MethodKind.StaticConstructor,
             };
-            var methodImportance = methodPropertiesByIncreasingImportance.IndexOf(true);
-            return methodImportance;
+            return 1 - methodPropertiesByIncreasingImportance.IndexOf(true);
         }
 
-        private static int GetFieldImportance(ISymbol symbol)
+        private static long GetFieldImportance(ISymbol symbol)
         {
             var field = symbol as IFieldSymbol;
             var fieldKindsByImportance = new List<bool?>
@@ -53,7 +52,9 @@ namespace PublicApiWriter.SymbolExtensions
                 field?.IsReadOnly,
                 field?.IsStatic,
             };
-            return fieldKindsByImportance.IndexOf(true);
+            return field?.ContainingType?.TypeKind != TypeKind.Enum
+                ? 1 - fieldKindsByImportance.IndexOf(true)
+                : Convert.ToInt64(field.ConstantValue);
         }
     }
 }

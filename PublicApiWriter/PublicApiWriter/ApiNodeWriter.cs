@@ -25,7 +25,7 @@ namespace PublicApiWriter
                 await file.WriteAsync($"{AccessibilityPrefix(apiNode)}{apiNode.Signature}");
                 if (recurse)
                 {
-                    var orderedMembers = apiNode.Members.OrderByDescending(m => m.Importance).ThenBy(m => m.Name);
+                    var orderedMembers = apiNode.Members.OrderBy(m => m.Importance).ThenBy(m => m.Name);
                     await WriteMembers(apiNode, file, cancellationToken, orderedMembers);
                 }
             }
@@ -70,7 +70,7 @@ namespace PublicApiWriter
 
         private static string AccessibilityPrefix(ApiNode node)
         {
-            return node.Kind == Namespace || node.Kind == Assembly ? ""
+            return node.Kind == Namespace || node.Kind == Assembly || node.SymbolAccessibility == Microsoft.CodeAnalysis.Accessibility.NotApplicable ? ""
                 : $"{node.SymbolAccessibility.ToString().ToLowerInvariant()} ";
         }
     }

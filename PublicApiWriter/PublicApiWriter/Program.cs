@@ -56,7 +56,7 @@ namespace PublicApiWriter
 
         public bool ShouldPrint(string @namespace, Accessibility symbolAccessibility)
         {
-            return symbolAccessibility >= Accessibility
+            return (symbolAccessibility >= Accessibility || symbolAccessibility == Accessibility.NotApplicable)
                    && IsIncluded(@namespace)
                    && !IsExcluded(@namespace);
         }
