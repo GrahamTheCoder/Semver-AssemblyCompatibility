@@ -27,10 +27,15 @@ namespace PublicApiWriter.SymbolExtensions
         private static ImmutableArray<SymbolDisplayPart> WithTypeSpecializations(ImmutableArray<SymbolDisplayPart> defaultParts, INamedTypeSymbol type)
         {
             if (type == null) return defaultParts;
-            var baseTypes = new[] { type.BaseType }.Where(t => t != null && t.SpecialType != SpecialType.System_Object);
+            var baseTypes = new[] { type.BaseType }.Where(t => NonImpliedBaseType(t));
             var inheritsFrom = baseTypes.Concat(GetInterfaces(type)).Select(t => GetSimpleTypeName(t)).ToList();
             var inheritanceSuffix = inheritsFrom.Any() ? s_InheritsFrom.Concat(CommaSeparate(inheritsFrom)) : new SymbolDisplayPart[0];
             return WithInheritsFrom(defaultParts, inheritanceSuffix);
+        }
+
+        private static bool NonImpliedBaseType(INamedTypeSymbol t)
+        {
+            return t != null && t.SpecialType != SpecialType.System_Object && t.SpecialType != SpecialType.System_Enum;
         }
 
         private static ImmutableArray<SymbolDisplayPart> WithInheritsFrom(ImmutableArray<SymbolDisplayPart> defaultParts, IEnumerable<SymbolDisplayPart> inheritanceSuffix)
