@@ -20,7 +20,7 @@ namespace PublicApiWriter.SymbolExtensions
         {
             var defaultFormat = SymbolDisplayFormat.CSharpErrorMessageFormat;
             return defaultFormat
-                .WithMemberOptions(IncludeExplicitInterface | IncludeParameters | IncludeAccessibility | IncludeModifiers | SymbolDisplayMemberOptions.IncludeType)
+                .WithMemberOptions(IncludeExplicitInterface | IncludeParameters | IncludeModifiers | SymbolDisplayMemberOptions.IncludeType)
                 .WithKindOptions(IncludeMemberKeyword | IncludeNamespaceKeyword | IncludeTypeKeyword)
                 .WithGenericsOptions(IncludeTypeConstraints | IncludeTypeParameters | IncludeVariance)
                 .WithParameterOptions(IncludeExtensionThis | IncludeOptionalBrackets | IncludeParamsRefOut | SymbolDisplayParameterOptions.IncludeType);
