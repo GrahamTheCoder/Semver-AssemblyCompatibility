@@ -12,9 +12,9 @@ namespace AssemblyApi.SymbolExtensions
 {
     internal static class SymbolFormatter
     {
-        private static SymbolDisplayFormat s_Format = CreateSignatureFormat();
-        private static SymbolDisplayPart[] s_CommaSpace = { new SymbolDisplayPart(SymbolDisplayPartKind.Punctuation, null, ","), new SymbolDisplayPart(SymbolDisplayPartKind.Space, null, " ") };
-        private static SymbolDisplayPart[] s_InheritsFrom = { new SymbolDisplayPart(SymbolDisplayPartKind.Text, null, " : ") };
+        private static readonly SymbolDisplayFormat s_Format = CreateSignatureFormat();
+        private static readonly SymbolDisplayPart[] s_CommaSpace = { new SymbolDisplayPart(SymbolDisplayPartKind.Punctuation, null, ","), new SymbolDisplayPart(SymbolDisplayPartKind.Space, null, " ") };
+        private static readonly SymbolDisplayPart[] s_InheritsFrom = { new SymbolDisplayPart(SymbolDisplayPartKind.Text, null, " : ") };
 
         public static string GetSignature(this ISymbol symbol)
         {
@@ -26,8 +26,8 @@ namespace AssemblyApi.SymbolExtensions
         private static ImmutableArray<SymbolDisplayPart> WithTypeSpecializations(ImmutableArray<SymbolDisplayPart> defaultParts, INamedTypeSymbol type)
         {
             if (type == null) return defaultParts;
-            var baseTypes = new[] { type.BaseType }.Where(t => NonImpliedBaseType(t));
-            var inheritsFrom = baseTypes.Concat(GetInterfaces(type)).Select(t => GetSimpleTypeName(t)).ToList();
+            var baseTypes = new[] { type.BaseType }.Where(NonImpliedBaseType);
+            var inheritsFrom = baseTypes.Concat(GetInterfaces(type)).Select(GetSimpleTypeName).ToList();
             var inheritanceSuffix = inheritsFrom.Any() ? s_InheritsFrom.Concat(CommaSeparate(inheritsFrom)) : new SymbolDisplayPart[0];
             return WithInheritsFrom(defaultParts, inheritanceSuffix);
         }
