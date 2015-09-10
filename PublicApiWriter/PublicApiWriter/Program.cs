@@ -24,24 +24,19 @@ namespace AssemblyApi
                 return;
             }
 
-            var publicApiWriter = new PublicApiWriter(new PrinterConfig(includeRegexes, excludeRegexes));
+            var publicApiWriter = CreateWriter(includeRegexes, excludeRegexes);
             WritePublicApi(publicApiWriter, solutionFilePath, outputFile, new CancellationTokenSource().Token).Wait();
+        }
+
+        private static PublicApiWriter CreateWriter(string includeRegexes, string excludeRegexes)
+        {
+            return new PublicApiWriter(new PrinterConfig(includeRegexes, excludeRegexes));
         }
 
         private static async Task WritePublicApi(PublicApiWriter publicApiWriter, string solutionFilePath, string outputFile, CancellationToken cancellationToken)
         {
-            var solutionNode = await ReadApiFromSolution(solutionFilePath, cancellationToken);
+            var solutionNode = await ApiReader.ReadApiFromSolution(solutionFilePath, cancellationToken);
             await publicApiWriter.Write(solutionNode, outputFile, cancellationToken);
-        }
-
-        private static async Task<IEnumerable<ApiNode>> ReadApiFromSolution(string solutionFilePath, CancellationToken cancellationToken)
-        {
-            using (var msWorkspace = MSBuildWorkspace.Create())
-            {
-                var result = await msWorkspace.OpenSolutionAsync(solutionFilePath, cancellationToken);
-                var solution = new ApiReader(result);
-                return await solution.ReadProjects(cancellationToken);
-            }
         }
 
         private static void PrintUsage()

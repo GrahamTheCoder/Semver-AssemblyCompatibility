@@ -4,6 +4,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using AssemblyApi.SymbolExtensions;
 using Microsoft.CodeAnalysis;
+using Microsoft.CodeAnalysis.MSBuild;
 
 namespace AssemblyApi
 {
@@ -14,6 +15,16 @@ namespace AssemblyApi
         public ApiReader(Solution solution)
         {
             m_Solution = solution;
+        }
+
+        public static async Task<IEnumerable<ApiNode>> ReadApiFromSolution(string solutionFilePath, CancellationToken cancellationToken)
+        {
+            using (var msWorkspace = MSBuildWorkspace.Create())
+            {
+                var result = await msWorkspace.OpenSolutionAsync(solutionFilePath, cancellationToken);
+                var solution = new ApiReader(result);
+                return await solution.ReadProjects(cancellationToken);
+            }
         }
 
         public async Task<IEnumerable<ApiNode>> ReadProjects(CancellationToken token)
