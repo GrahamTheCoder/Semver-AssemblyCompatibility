@@ -24,14 +24,14 @@ namespace AssemblyApi
                 return;
             }
 
-            var printerConfig = new PrinterConfig(includeRegexes, excludeRegexes);
-            WritePublicApi(solutionFilePath, outputFile, printerConfig, new CancellationTokenSource().Token).Wait();
+            var publicApiWriter = new PublicApiWriter(new PrinterConfig(includeRegexes, excludeRegexes));
+            WritePublicApi(publicApiWriter, solutionFilePath, outputFile, new CancellationTokenSource().Token).Wait();
         }
 
-        private static async Task WritePublicApi(string solutionFilePath, string outputFile, PrinterConfig printerConfig, CancellationToken cancellationToken)
+        private static async Task WritePublicApi(PublicApiWriter publicApiWriter, string solutionFilePath, string outputFile, CancellationToken cancellationToken)
         {
             var solutionNode = await ReadApiFromSolution(solutionFilePath, cancellationToken);
-            new PublicApiWriter(printerConfig).Write(solutionNode, outputFile, cancellationToken).Wait(cancellationToken);
+            await publicApiWriter.Write(solutionNode, outputFile, cancellationToken);
         }
 
         private static async Task<IEnumerable<ApiNode>> ReadApiFromSolution(string solutionFilePath, CancellationToken cancellationToken)
