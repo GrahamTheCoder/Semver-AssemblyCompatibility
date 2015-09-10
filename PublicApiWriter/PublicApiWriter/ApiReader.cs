@@ -11,6 +11,10 @@ namespace AssemblyApi
     internal class ApiReader
     {
         private readonly Solution m_Solution;
+        private static readonly Dictionary<string, string> s_DefaultProperties = new Dictionary<string, string>
+        {
+            {"BuildingInsideVisualStudio", "true"}
+        };
 
         public ApiReader(Solution solution)
         {
@@ -19,7 +23,7 @@ namespace AssemblyApi
 
         public static async Task<IEnumerable<ApiNode>> ReadApiFromSolution(string solutionFilePath, CancellationToken cancellationToken)
         {
-            using (var msWorkspace = MSBuildWorkspace.Create())
+            using (var msWorkspace = MSBuildWorkspace.Create(s_DefaultProperties))
             {
                 var result = await msWorkspace.OpenSolutionAsync(solutionFilePath, cancellationToken);
                 var solution = new ApiReader(result);
