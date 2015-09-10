@@ -26,10 +26,15 @@ namespace AssemblyApi.Output
                 await file.WriteAsync($"{AccessibilityPrefix(apiNode)}{apiNode.Signature}");
                 if (recurse)
                 {
-                    var orderedMembers = apiNode.Members.OrderBy(m => m.Importance).ThenBy(m => m.Name);
+                    var orderedMembers = MembersInCanonicalOrder(apiNode);
                     await WriteMembers(apiNode, file, cancellationToken, orderedMembers);
                 }
             }
+        }
+
+        private static IOrderedEnumerable<ApiNode> MembersInCanonicalOrder(ApiNode apiNode)
+        {
+            return apiNode.Members.OrderBy(m => m.Importance).ThenBy(m => m.Name);
         }
 
         private async Task WriteMembers(ApiNode apiNode, TextWriter file, CancellationToken cancellationToken, IOrderedEnumerable<ApiNode> orderedMembers)
