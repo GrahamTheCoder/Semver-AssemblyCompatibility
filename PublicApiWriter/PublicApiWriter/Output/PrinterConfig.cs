@@ -7,32 +7,33 @@ namespace AssemblyApi.Output
 {
     internal class PrinterConfig
     {
-        public string[] IncludeSignatureRegexes { get; }
-        public string[] ExcludeSignatureRegexes { get; }
-        public Accessibility Accessibility { get; } = Accessibility.Public;
+        private readonly Accessibility m_MinAccessibility;
+        private readonly string[] m_IncludeSignatureRegexes;
+        private readonly string[] m_ExcludeSignatureRegexes;
 
-        public PrinterConfig(string semiColonSeparatedIncludeRegexes, string semiColonSeparatedExcludeRegexes)
+        public PrinterConfig(string semiColonSeparatedIncludeRegexes, string semiColonSeparatedExcludeRegexes, Accessibility minAccessibility = Accessibility.Public)
         {
             var splitters = new[] { ";" };
-            IncludeSignatureRegexes = semiColonSeparatedIncludeRegexes.Split(splitters, StringSplitOptions.RemoveEmptyEntries);
-            ExcludeSignatureRegexes = semiColonSeparatedExcludeRegexes.Split(splitters, StringSplitOptions.RemoveEmptyEntries);
+            m_IncludeSignatureRegexes = semiColonSeparatedIncludeRegexes.Split(splitters, StringSplitOptions.RemoveEmptyEntries);
+            m_ExcludeSignatureRegexes = semiColonSeparatedExcludeRegexes.Split(splitters, StringSplitOptions.RemoveEmptyEntries);
+            m_MinAccessibility = minAccessibility;
         }
 
         public bool ShouldPrint(string @namespace, Accessibility symbolAccessibility)
         {
-            return (symbolAccessibility >= Accessibility || symbolAccessibility == Accessibility.NotApplicable)
+            return (symbolAccessibility >= m_MinAccessibility || symbolAccessibility == Accessibility.NotApplicable)
                    && IsIncluded(@namespace)
                    && !IsExcluded(@namespace);
         }
 
         private bool IsIncluded(string ns)
         {
-            return !IncludeSignatureRegexes.Any() || IncludeSignatureRegexes.Any(p => Regex.IsMatch(ns, p, RegexOptions.IgnoreCase));
+            return !m_IncludeSignatureRegexes.Any() || m_IncludeSignatureRegexes.Any(p => Regex.IsMatch(ns, p, RegexOptions.IgnoreCase));
         }
 
         private bool IsExcluded(string ns)
         {
-            return ExcludeSignatureRegexes.Any(p => Regex.IsMatch(ns, p, RegexOptions.IgnoreCase));
+            return m_ExcludeSignatureRegexes.Any(p => Regex.IsMatch(ns, p, RegexOptions.IgnoreCase));
         }
     }
 }
