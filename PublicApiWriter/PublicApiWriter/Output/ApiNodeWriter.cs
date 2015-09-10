@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using Microsoft.CodeAnalysis;
 using static Microsoft.CodeAnalysis.SymbolKind;
 
 namespace AssemblyApi.Output
@@ -70,7 +71,7 @@ namespace AssemblyApi.Output
 
         private static string AccessibilityPrefix(ApiNode node)
         {
-            return node.Kind == Namespace || node.Kind == Assembly || node.SymbolAccessibility == Microsoft.CodeAnalysis.Accessibility.NotApplicable ? ""
+            return node.Kind == Namespace || node.Kind == Assembly || node.SymbolAccessibility == Accessibility.NotApplicable ? ""
                 : $"{node.SymbolAccessibility.ToString().ToLowerInvariant()} ";
         }
     }

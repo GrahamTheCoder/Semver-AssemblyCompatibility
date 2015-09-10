@@ -1,21 +1,20 @@
-﻿using Microsoft.CodeAnalysis;
+﻿using System.Collections.Generic;
+using System.Collections.Immutable;
+using System.Linq;
+using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using static Microsoft.CodeAnalysis.SymbolDisplayMemberOptions;
 using static Microsoft.CodeAnalysis.SymbolDisplayKindOptions;
 using static Microsoft.CodeAnalysis.SymbolDisplayGenericsOptions;
 using static Microsoft.CodeAnalysis.SymbolDisplayParameterOptions;
-using System;
-using System.Linq;
-using System.Collections.Immutable;
-using System.Collections.Generic;
 
 namespace AssemblyApi.SymbolExtensions
 {
     internal static class SymbolFormatter
     {
         private static SymbolDisplayFormat s_Format = CreateSignatureFormat();
-        private static SymbolDisplayPart[] s_CommaSpace = new[] { new SymbolDisplayPart(SymbolDisplayPartKind.Punctuation, null, ","), new SymbolDisplayPart(SymbolDisplayPartKind.Space, null, " ") };
-        private static SymbolDisplayPart[] s_InheritsFrom = new[] { new SymbolDisplayPart(SymbolDisplayPartKind.Text, null, " : ") };
+        private static SymbolDisplayPart[] s_CommaSpace = { new SymbolDisplayPart(SymbolDisplayPartKind.Punctuation, null, ","), new SymbolDisplayPart(SymbolDisplayPartKind.Space, null, " ") };
+        private static SymbolDisplayPart[] s_InheritsFrom = { new SymbolDisplayPart(SymbolDisplayPartKind.Text, null, " : ") };
 
         public static string GetSignature(this ISymbol symbol)
         {

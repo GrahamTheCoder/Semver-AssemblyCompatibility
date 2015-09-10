@@ -1,7 +1,7 @@
-﻿using Microsoft.CodeAnalysis;
-using System;
+﻿using System;
 using System.Linq;
 using System.Text.RegularExpressions;
+using Microsoft.CodeAnalysis;
 
 namespace AssemblyApi.Output
 {
