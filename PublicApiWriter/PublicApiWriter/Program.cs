@@ -15,17 +15,21 @@ namespace AssemblyApi
             var outputFile = args.ElementAtOrDefault(1) ?? "out.txt";
             var includeRegexes = (args.ElementAtOrDefault(2) ?? "");
             var excludeRegexes = (args.ElementAtOrDefault(3) ?? "");
+
+            if (string.IsNullOrEmpty(solutionFilePath) || !File.Exists(solutionFilePath))
+            {
+                PrintUsage();
+                return;
+            }
+
             WritePublicApi(solutionFilePath, outputFile, includeRegexes, excludeRegexes);
+
         }
 
         private static void WritePublicApi(string solutionFilePath, string outputFile, string includeRegexes, string excludeRegexes)
         {
             var printerConfig = new PrinterConfig(includeRegexes, excludeRegexes);
             var cancellationToken = new CancellationTokenSource().Token;
-            if (string.IsNullOrEmpty(solutionFilePath) || !File.Exists(solutionFilePath))
-            {
-                PrintUsage();
-            }
 
             using (var msWorkspace = MSBuildWorkspace.Create())
             {
