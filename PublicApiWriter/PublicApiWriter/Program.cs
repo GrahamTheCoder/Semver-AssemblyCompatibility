@@ -1,7 +1,9 @@
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading;
+using System.Threading.Tasks;
 using Microsoft.CodeAnalysis.MSBuild;
 using AssemblyApi.Output;
 
@@ -22,21 +24,23 @@ namespace AssemblyApi
                 return;
             }
 
-            WritePublicApi(solutionFilePath, outputFile, includeRegexes, excludeRegexes);
-
+            var printerConfig = new PrinterConfig(includeRegexes, excludeRegexes);
+            WritePublicApi(solutionFilePath, outputFile, printerConfig, new CancellationTokenSource().Token).Wait();
         }
 
-        private static void WritePublicApi(string solutionFilePath, string outputFile, string includeRegexes, string excludeRegexes)
+        private static async Task WritePublicApi(string solutionFilePath, string outputFile, PrinterConfig printerConfig, CancellationToken cancellationToken)
         {
-            var printerConfig = new PrinterConfig(includeRegexes, excludeRegexes);
-            var cancellationToken = new CancellationTokenSource().Token;
+            var solutionNode = await ReadApiFromSolution(solutionFilePath, cancellationToken);
+            new PublicApiWriter(printerConfig).Write(solutionNode, outputFile, cancellationToken).Wait(cancellationToken);
+        }
 
+        private static async Task<IEnumerable<ApiNode>> ReadApiFromSolution(string solutionFilePath, CancellationToken cancellationToken)
+        {
             using (var msWorkspace = MSBuildWorkspace.Create())
             {
-                var result = msWorkspace.OpenSolutionAsync(solutionFilePath, cancellationToken).Result;
+                var result = await msWorkspace.OpenSolutionAsync(solutionFilePath, cancellationToken);
                 var solution = new ApiReader(result);
-                var solutionNode = solution.ReadProjects(cancellationToken);
-                new PublicApiWriter(printerConfig).Write(solutionNode, outputFile, cancellationToken).Wait(cancellationToken);
+                return solution.ReadProjects(cancellationToken);
             }
         }
 
