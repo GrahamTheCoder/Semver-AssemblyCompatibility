@@ -40,7 +40,7 @@ namespace AssemblyApi
             {
                 var result = await msWorkspace.OpenSolutionAsync(solutionFilePath, cancellationToken);
                 var solution = new ApiReader(result);
-                return solution.ReadProjects(cancellationToken);
+                return await solution.ReadProjects(cancellationToken);
             }
         }
 

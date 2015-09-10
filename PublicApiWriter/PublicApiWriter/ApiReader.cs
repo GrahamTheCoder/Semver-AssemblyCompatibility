@@ -20,12 +20,10 @@ namespace AssemblyApi
             m_Solution = solution;
         }
 
-        public IEnumerable<ApiNode> ReadProjects(CancellationToken token)
+        public async Task<IEnumerable<ApiNode>> ReadProjects(CancellationToken token)
         {
-            foreach (var project in m_Solution.Projects)
-            {
-                yield return CreateAssemblyNode(token, project).Result;
-            }
+            var projectNodes = m_Solution.Projects.Select(project => CreateAssemblyNode(token, project));
+            return await Task.WhenAll(projectNodes);
         }
 
         private async Task<ApiNode> CreateAssemblyNode(CancellationToken token, Project project)
