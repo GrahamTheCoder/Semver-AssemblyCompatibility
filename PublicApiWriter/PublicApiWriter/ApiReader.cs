@@ -24,10 +24,15 @@ namespace AssemblyApi
         {
             foreach (var project in m_Solution.Projects)
             {
-                var assemblyNode = ApiNode.CreateAssemblyRoot(project.AssemblyName);
-                AddTypes(project, assemblyNode, token).Wait(token);
-                yield return assemblyNode;
+                yield return CreateAssemblyNode(token, project).Result;
             }
+        }
+
+        private async Task<ApiNode> CreateAssemblyNode(CancellationToken token, Project project)
+        {
+            var assemblyNode = ApiNode.CreateAssemblyRoot(project.AssemblyName);
+            await AddTypes(project, assemblyNode, token);
+            return assemblyNode;
         }
 
         private async Task AddTypes(Project project, ApiNode assemblyNode, CancellationToken cancellationToken)
