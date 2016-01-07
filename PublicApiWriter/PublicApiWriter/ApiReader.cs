@@ -13,7 +13,8 @@ namespace AssemblyApi
         private readonly Solution m_Solution;
         private static readonly Dictionary<string, string> s_DefaultProperties = new Dictionary<string, string>
         {
-            {"BuildingInsideVisualStudio", "true"}
+            {"BuildingInsideVisualStudio", "true"},
+            {"SemanticAnalysisOnly", "true"},
         };
 
         public ApiReader(Solution solution)
