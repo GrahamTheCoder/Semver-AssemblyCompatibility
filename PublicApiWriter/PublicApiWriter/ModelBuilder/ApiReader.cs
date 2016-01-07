@@ -6,7 +6,7 @@ using AssemblyApi.SymbolExtensions;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.MSBuild;
 
-namespace AssemblyApi
+namespace AssemblyApi.ModelBuilder
 {
     internal class ApiReader
     {
@@ -22,7 +22,7 @@ namespace AssemblyApi
             m_Solution = solution;
         }
 
-        public static async Task<IEnumerable<ApiNode>> ReadApiFromSolution(string solutionFilePath, CancellationToken cancellationToken)
+        public static async Task<IReadOnlyCollection<ApiNode>> ReadApiFromSolution(string solutionFilePath, CancellationToken cancellationToken)
         {
             using (var msWorkspace = MSBuildWorkspace.Create(s_DefaultProperties))
             {
@@ -32,7 +32,7 @@ namespace AssemblyApi
             }
         }
 
-        public async Task<IEnumerable<ApiNode>> ReadProjects(CancellationToken token)
+        public async Task<IReadOnlyCollection<ApiNode>> ReadProjects(CancellationToken token)
         {
             var projectNodes = m_Solution.Projects.Select(project => CreateAssemblyNode(token, project));
             return await Task.WhenAll(projectNodes);
