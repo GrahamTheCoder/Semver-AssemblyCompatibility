@@ -24,13 +24,7 @@ namespace AssemblyApi
             }
 
             var printerConfig = new PrinterConfig(includeRegexes, excludeRegexes);
-            var publicApiWriter = CreateWriter(printerConfig);
-            WritePublicApi(publicApiWriter, printerConfig, solutionFilePath, outputFile, new CancellationTokenSource().Token).Wait();
-        }
-
-        private static PublicApiWriter CreateWriter(PrinterConfig apiNodeWriter)
-        {
-            return new PublicApiWriter(apiNodeWriter);
+            WritePublicApi(new PublicApiWriter(), printerConfig, solutionFilePath, outputFile, new CancellationTokenSource().Token).Wait();
         }
 
         private static async Task WritePublicApi(PublicApiWriter publicApiWriter, PrinterConfig printerConfig, string solutionFilePath, string outputFile, CancellationToken cancellationToken)

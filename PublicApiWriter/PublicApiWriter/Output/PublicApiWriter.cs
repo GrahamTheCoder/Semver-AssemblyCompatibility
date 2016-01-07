@@ -11,9 +11,9 @@ namespace AssemblyApi.Output
     {
         private readonly ApiNodeWriter m_ApiNodeWriter;
 
-        public PublicApiWriter(PrinterConfig apiNodeWriter)
+        public PublicApiWriter()
         {
-            m_ApiNodeWriter = new ApiNodeWriter(apiNodeWriter);
+            m_ApiNodeWriter = new ApiNodeWriter();
         }
 
         public async Task Write(IEnumerable<ApiNode> nodes, string outputFile, CancellationToken cancellationToken)
