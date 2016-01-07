@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
@@ -39,6 +40,19 @@ namespace AssemblyApi
         public ApiNode AddMember(string signature, string @namespace, Accessibility symbolAccessibility, SymbolKind kind, string name, long memberImportance)
         {
             return m_Members.GetOrAdd(signature, new ApiNode(signature, @namespace, symbolAccessibility, kind, name, memberImportance));
+        }
+
+        public void RemoveDescendantsWhere(Predicate<ApiNode> predicate)
+        {
+            foreach (var key in m_Members.Keys)
+            {
+                ApiNode value;
+                if (m_Members.TryGetValue(key, out value) && predicate(value))
+                {
+                    ApiNode node;
+                    m_Members.TryRemove(key, out node);
+                }
+            }
         }
 
         public override string ToString()
