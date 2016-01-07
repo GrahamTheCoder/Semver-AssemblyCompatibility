@@ -20,7 +20,7 @@ namespace AssemblyApi.SymbolExtensions
         {
             var defaultParts = SymbolDisplay.ToDisplayParts(symbol, s_Format);
             var allParts = WithSupertypes(defaultParts, symbol as INamedTypeSymbol);
-            return allParts.ToDisplayString();
+            return allParts.ToDisplayString().Replace($"{symbol.ContainingNamespace}.", "");
         }
 
         private static ImmutableArray<SymbolDisplayPart> WithSupertypes(ImmutableArray<SymbolDisplayPart> defaultParts, INamedTypeSymbol type)
