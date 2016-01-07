@@ -93,6 +93,7 @@
   <ItemGroup>
     <Compile Include="ModelBuilder\ApiNode.cs" />
     <Compile Include="ModelBuilder\ApiReader.cs" />
+    <Compile Include="ModelBuilder\ApiFilter.cs" />
     <Compile Include="Output\ApiNodeWriter.cs" />
     <Compile Include="Output\PrinterConfig.cs" />
     <Compile Include="Program.cs" />

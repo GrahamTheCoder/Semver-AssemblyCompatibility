@@ -33,7 +33,8 @@ namespace AssemblyApi.Output
 
         private bool IsExcluded(string ns)
         {
-            return m_ExcludeSignatureRegexes.Any(p => Regex.IsMatch(ns, p, RegexOptions.IgnoreCase));
+            var isExcluded = m_ExcludeSignatureRegexes.Any(p => Regex.IsMatch(ns, p, RegexOptions.IgnoreCase));
+            return isExcluded;
         }
     }
 }

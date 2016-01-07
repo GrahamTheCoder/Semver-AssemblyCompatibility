@@ -3,6 +3,7 @@ using System.IO;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using AssemblyApi.ModelBuilder;
 using AssemblyApi.Output;
 
 namespace AssemblyApi
@@ -22,19 +23,21 @@ namespace AssemblyApi
                 return;
             }
 
-            var publicApiWriter = CreateWriter(includeRegexes, excludeRegexes);
-            WritePublicApi(publicApiWriter, solutionFilePath, outputFile, new CancellationTokenSource().Token).Wait();
+            var printerConfig = new PrinterConfig(includeRegexes, excludeRegexes);
+            var publicApiWriter = CreateWriter(printerConfig);
+            WritePublicApi(publicApiWriter, printerConfig, solutionFilePath, outputFile, new CancellationTokenSource().Token).Wait();
         }
 
-        private static PublicApiWriter CreateWriter(string includeRegexes, string excludeRegexes)
+        private static PublicApiWriter CreateWriter(PrinterConfig apiNodeWriter)
         {
-            return new PublicApiWriter(new PrinterConfig(includeRegexes, excludeRegexes));
+            return new PublicApiWriter(apiNodeWriter);
         }
 
-        private static async Task WritePublicApi(PublicApiWriter publicApiWriter, string solutionFilePath, string outputFile, CancellationToken cancellationToken)
+        private static async Task WritePublicApi(PublicApiWriter publicApiWriter, PrinterConfig printerConfig, string solutionFilePath, string outputFile, CancellationToken cancellationToken)
         {
-            var solutionNode = await ApiReader.ReadApiFromSolution(solutionFilePath, cancellationToken);
-            await publicApiWriter.Write(solutionNode, outputFile, cancellationToken);
+            var solutionNodes = await ApiReader.ReadApiFromSolution(solutionFilePath, cancellationToken);
+            new ApiFilter(printerConfig).ApplyTo(solutionNodes);
+            await publicApiWriter.Write(solutionNodes, outputFile, cancellationToken);
         }
 
         private static void PrintUsage()
