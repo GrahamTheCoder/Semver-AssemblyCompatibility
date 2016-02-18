@@ -10,31 +10,42 @@ namespace AssemblyApi.ModelBuilder
 {
     internal class ApiReader
     {
-        private readonly Solution m_Solution;
+        private readonly IEnumerable<Project> m_Projects;
         private static readonly Dictionary<string, string> s_DefaultProperties = new Dictionary<string, string>
         {
             {"BuildingInsideVisualStudio", "true"},
             {"SemanticAnalysisOnly", "true"},
         };
 
-        public ApiReader(Solution solution)
+        public ApiReader(IEnumerable<Project> projects)
         {
-            m_Solution = solution;
+            m_Projects = projects;
         }
 
-        public static async Task<IReadOnlyCollection<ApiNode>> ReadApiFromSolution(string solutionFilePath, CancellationToken cancellationToken)
+        public static async Task<IReadOnlyCollection<ApiNode>> ReadApiFromProjects(string solutionFilePath, CancellationToken cancellationToken)
         {
             using (var msWorkspace = MSBuildWorkspace.Create(s_DefaultProperties))
             {
-                var result = await msWorkspace.OpenSolutionAsync(solutionFilePath, cancellationToken);
-                var solution = new ApiReader(result);
+                var projects = await GetProjects(solutionFilePath, cancellationToken, msWorkspace);
+                var solution = new ApiReader(projects);
                 return await solution.ReadProjects(cancellationToken);
             }
         }
 
+        private static async Task<IEnumerable<Project>>  GetProjects(string solutionFilePath, CancellationToken cancellationToken,
+            MSBuildWorkspace msWorkspace)
+        {
+            if (solutionFilePath.EndsWith(".sln"))
+            {
+                var solution = await msWorkspace.OpenSolutionAsync(solutionFilePath, cancellationToken);
+                return solution.Projects;
+            }
+            return new [] { await msWorkspace.OpenProjectAsync(solutionFilePath, cancellationToken)};
+        }
+
         public async Task<IReadOnlyCollection<ApiNode>> ReadProjects(CancellationToken token)
         {
-            var projectNodes = m_Solution.Projects.Select(project => CreateAssemblyNode(token, project));
+            var projectNodes = m_Projects.Select(project => CreateAssemblyNode(token, project));
             return await Task.WhenAll(projectNodes);
         }
 
