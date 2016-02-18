@@ -25,5 +25,47 @@ namespace AssemblyApiTests
 
             Assert.That(assemblyNode.Members, Has.Count.EqualTo(expectedMembers));
         }
+
+        [Test]
+        public void IncludedIfMatchedByInclude()
+        {
+            var toIncludeRegex = @"Api\.Tests";
+            var type = new ApiNodeBuilder(NamedType, Public);
+            var namespaceNode = new ApiNodeBuilder(Namespace, signature: "Api.Tests").WithMembers(type);
+            var assemblyNode = new ApiNodeBuilder(Assembly).WithMembers(namespaceNode).Build();
+            var apiFilter = new ApiFilter(new PrinterConfig(toIncludeRegex, ""));
+
+            apiFilter.ApplyTo(new[] { assemblyNode });
+
+            Assert.That(assemblyNode.Members, Is.Not.Empty);
+        }
+
+        [Test]
+        public void AllExcludedIfDoNotMatchInclude()
+        {
+            var toInclude = "Api.NonExistent";
+            var type = new ApiNodeBuilder(NamedType, Public);
+            var namespaceNode = new ApiNodeBuilder(Namespace, signature: "Api.Tests").WithMembers(type);
+            var assemblyNode = new ApiNodeBuilder(Assembly).WithMembers(namespaceNode).Build();
+            var apiFilter = new ApiFilter(new PrinterConfig(toInclude, ""));
+
+            apiFilter.ApplyTo(new[] { assemblyNode });
+
+            Assert.That(assemblyNode.Members, Is.Empty);
+        }
+
+        [Test]
+        public void ExcludeTakesPrecedenceOverInclude()
+        {
+            var namespaceRegex = @"Api\.Tests";
+            var type = new ApiNodeBuilder(NamedType, Public);
+            var namespaceNode = new ApiNodeBuilder(Namespace, signature: "Api.Tests").WithMembers(type);
+            var assemblyNode = new ApiNodeBuilder(Assembly).WithMembers(namespaceNode).Build();
+            var apiFilter = new ApiFilter(new PrinterConfig(namespaceRegex, namespaceRegex));
+
+            apiFilter.ApplyTo(new[] { assemblyNode });
+
+            Assert.That(assemblyNode.Members, Is.Empty);
+        }
     }
 }
