@@ -17,6 +17,8 @@ namespace AssemblyApi.ModelBuilder
             {"SemanticAnalysisOnly", "true"},
         };
 
+        private static readonly SymbolKind[] NonApiSymbolKinds = {SymbolKind.Alias , SymbolKind.Preprocessing, SymbolKind.Label};
+
         public ApiReader(IEnumerable<Project> projects)
         {
             m_Projects = projects;
@@ -67,7 +69,7 @@ namespace AssemblyApi.ModelBuilder
                 var semanticDocumentMembers = classes
                     .Select(syntaxNode => semantic.GetDeclaredSymbol(syntaxNode))
                     .Where(symbol => symbol != null);
-                foreach (var semanticDocSymbol in semanticDocumentMembers)
+                foreach (var semanticDocSymbol in semanticDocumentMembers.Where(m => !NonApiSymbolKinds.Contains(m.Kind)))
                 {
                     CreateApiNode(assemblyNode, semanticDocSymbol, cancellationToken);
                 }
@@ -79,7 +81,9 @@ namespace AssemblyApi.ModelBuilder
             var symbolNamespace = symbol.ContainingNamespace.Name;
             string signature = symbol.GetSignature();
             var memberImportance = symbol.GetImportance();
-            var apiNode = parentNode.AddMember(signature, symbolNamespace, GetPresentedAccessibility(symbol), symbol.Kind, symbol.Name, memberImportance);
+            var presentedAccessibility = GetPresentedAccessibility(symbol);
+
+            var apiNode = parentNode.AddMember(signature, symbolNamespace, presentedAccessibility, symbol.Kind, symbol.Name, memberImportance);
             AddMembers(apiNode, symbol, cancellationToken);
             return apiNode;
         }
