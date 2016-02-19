@@ -5,6 +5,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using AssemblyApi.ModelBuilder;
 using AssemblyApi.Output;
+using Newtonsoft.Json;
 
 namespace AssemblyApi
 {
@@ -38,7 +39,7 @@ namespace AssemblyApi
         {
             var solutionNodes = await ApiReader.ReadApiFromProjects(solutionOrProjectFilePath, cancellationToken);
             new ApiFilter(printerConfig).ApplyTo(solutionNodes);
-            await publicApiWriter.Write(solutionNodes, outputFile, cancellationToken);
+            await publicApiWriter.WriteHumanReadable(solutionNodes, outputFile, cancellationToken);
         }
 
         private static void PrintUsage()
