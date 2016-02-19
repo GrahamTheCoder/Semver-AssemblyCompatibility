@@ -74,12 +74,12 @@ namespace AssemblyApi.ModelBuilder
             }
         }
 
-        private ApiNode CreateApiNode(ApiNode assemblyNode, ISymbol symbol, CancellationToken cancellationToken)
+        private ApiNode CreateApiNode(ApiNode parentNode, ISymbol symbol, CancellationToken cancellationToken)
         {
             var symbolNamespace = symbol.ContainingNamespace.Name;
             string signature = symbol.GetSignature();
             var memberImportance = symbol.GetImportance();
-            var apiNode = assemblyNode.AddMember(signature, symbolNamespace, GetPresentedAccessibility(symbol), symbol.Kind, symbol.Name, memberImportance);
+            var apiNode = parentNode.AddMember(signature, symbolNamespace, GetPresentedAccessibility(symbol), symbol.Kind, symbol.Name, memberImportance);
             AddMembers(apiNode, symbol, cancellationToken);
             return apiNode;
         }
