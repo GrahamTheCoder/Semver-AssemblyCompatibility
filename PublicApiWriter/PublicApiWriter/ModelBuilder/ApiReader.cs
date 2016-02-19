@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
@@ -82,8 +83,8 @@ namespace AssemblyApi.ModelBuilder
             string signature = symbol.GetSignature();
             var memberImportance = symbol.GetImportance();
             var presentedAccessibility = GetPresentedAccessibility(symbol);
-
-            var apiNode = parentNode.AddMember(signature, symbolNamespace, presentedAccessibility, symbol.Kind, symbol.Name, memberImportance);
+            var attributes = symbol.GetAttributes().ToLookup(a => a.AttributeClass.Name, a => string.Join(", ", a.ConstructorArguments.Select(x => x.Value.ToString())));
+            var apiNode = parentNode.AddMember(signature, symbolNamespace, presentedAccessibility, symbol.Kind, symbol.Name, attributes, memberImportance);
             AddMembers(apiNode, symbol, cancellationToken);
             return apiNode;
         }

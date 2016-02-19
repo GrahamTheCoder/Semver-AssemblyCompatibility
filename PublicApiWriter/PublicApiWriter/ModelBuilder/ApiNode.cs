@@ -10,8 +10,9 @@ namespace AssemblyApi.ModelBuilder
     {
         private readonly ConcurrentDictionary<string, ApiNode> m_Members = new ConcurrentDictionary<string, ApiNode>();
 
-        public ApiNode(string signature, string @namespace, Accessibility symbolAccessibility, SymbolKind kind, string name, long memberImportance = 0)
+        public ApiNode(string signature, string @namespace, Accessibility symbolAccessibility, SymbolKind kind, string name, ILookup<string, string> attributes = null, long memberImportance = 0)
         {
+            Attributes = attributes ?? CreateEmptyLookup<string>();
             Signature = signature;
             Namespace = @namespace;
             SymbolAccessibility = symbolAccessibility;
@@ -20,15 +21,22 @@ namespace AssemblyApi.ModelBuilder
             Importance = memberImportance;
         }
 
+        private static ILookup<T, T> CreateEmptyLookup<T>()
+        {
+            return new T[0].ToLookup(_ => _, _ => _);
+        }
+
         /// <summary>
         /// A lower value indicates a more important member relative to its siblings
         /// </summary>
         public long Importance { get; }
+
         public SymbolKind Kind { get; }
         public string Name { get; }
         public string Namespace { get; }
         public string Signature { get; }
         public Accessibility SymbolAccessibility { get; }
+        public ILookup<string, string> Attributes { get; }
         public IEnumerable<ApiNode> Members => m_Members.Values.ToList();
 
 
@@ -37,9 +45,9 @@ namespace AssemblyApi.ModelBuilder
             return new ApiNode("assembly " + assemblyName, assemblyName, Accessibility.Public, SymbolKind.Assembly, assemblyName);
         }
 
-        public ApiNode AddMember(string signature, string @namespace, Accessibility symbolAccessibility, SymbolKind kind, string name, long memberImportance)
+        public ApiNode AddMember(string signature, string @namespace, Accessibility symbolAccessibility, SymbolKind kind, string name, ILookup<string, string> attributes = null, long memberImportance = 0)
         {
-            return m_Members.GetOrAdd(signature, new ApiNode(signature, @namespace, symbolAccessibility, kind, name, memberImportance));
+            return m_Members.GetOrAdd(signature, new ApiNode(signature, @namespace, symbolAccessibility, kind, name, attributes, memberImportance));
         }
 
         public void RemoveDescendantsWhere(Predicate<ApiNode> predicate)

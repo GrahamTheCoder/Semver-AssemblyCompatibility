@@ -29,14 +29,14 @@ namespace AssemblyApiTests.Builders
 
         public ApiNode Build()
         {
-            var topLevel = new ApiNode(m_Signature, "", m_SymbolAccessibility, m_SymbolKind, m_Name, 0L);
+            var topLevel = new ApiNode(m_Signature, "", m_SymbolAccessibility, m_SymbolKind, m_Name);
             AddMembersAsChildrenOf(topLevel);
             return topLevel;
         }
 
         private ApiNode AddAsChildOf(ApiNode parent)
         {
-            var newMember = parent.AddMember(m_Signature, (parent.Namespace + "." + m_Name).TrimStart('.'), m_SymbolAccessibility, m_SymbolKind, m_Name, 0L);
+            var newMember = parent.AddMember(m_Signature, (parent.Namespace + "." + m_Name).TrimStart('.'), m_SymbolAccessibility, m_SymbolKind, m_Name);
             AddMembersAsChildrenOf(newMember);
             return newMember;
         }
