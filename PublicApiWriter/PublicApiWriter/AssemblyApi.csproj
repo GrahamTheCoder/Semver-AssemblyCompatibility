@@ -94,6 +94,7 @@
     <Reference Include="System.Xml.Linq" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Extensions\LookupExtensions.cs" />
     <Compile Include="ModelBuilder\ApiNode.cs" />
     <Compile Include="ModelBuilder\ApiReader.cs" />
     <Compile Include="ModelBuilder\ApiFilter.cs" />
