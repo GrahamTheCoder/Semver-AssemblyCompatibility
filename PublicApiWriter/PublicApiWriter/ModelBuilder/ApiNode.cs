@@ -2,7 +2,9 @@ using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
+using AssemblyApi.Extensions;
 using Microsoft.CodeAnalysis;
+using Newtonsoft.Json;
 
 namespace AssemblyApi.ModelBuilder
 {
@@ -10,20 +12,27 @@ namespace AssemblyApi.ModelBuilder
     {
         private readonly ConcurrentDictionary<string, ApiNode> m_Members = new ConcurrentDictionary<string, ApiNode>();
 
-        public ApiNode(string signature, string @namespace, Accessibility symbolAccessibility, SymbolKind kind, string name, ILookup<string, string> attributes = null, long memberImportance = 0)
+        [JsonConstructor]
+        private ApiNode(string signature, string @namespace, Accessibility symbolAccessibility, SymbolKind kind,
+            string name, Dictionary<string, List<string>> attributes, long importance,
+            IEnumerable<ApiNode> members)
+            :this (signature, @namespace, symbolAccessibility, kind, name, attributes, importance)
         {
-            Attributes = attributes ?? CreateEmptyLookup<string>();
+            foreach (var member in members)
+            {
+                AddMember(member);
+            }
+        }
+
+        public ApiNode(string signature, string @namespace, Accessibility symbolAccessibility, SymbolKind kind, string name, Dictionary<string, List<string>> attributes = null, long importance = 0)
+        {
+            Attributes = attributes ?? new Dictionary<string, List<string>>();
             Signature = signature;
             Namespace = @namespace;
             SymbolAccessibility = symbolAccessibility;
             Kind = kind;
             Name = name;
-            Importance = memberImportance;
-        }
-
-        private static ILookup<T, T> CreateEmptyLookup<T>()
-        {
-            return new T[0].ToLookup(_ => _, _ => _);
+            Importance = importance;
         }
 
         /// <summary>
@@ -32,11 +41,17 @@ namespace AssemblyApi.ModelBuilder
         public long Importance { get; }
 
         public SymbolKind Kind { get; }
+
         public string Name { get; }
+
         public string Namespace { get; }
+
         public string Signature { get; }
+
         public Accessibility SymbolAccessibility { get; }
-        public ILookup<string, string> Attributes { get; }
+
+        public Dictionary<string, List<string>> Attributes { get; }
+
         public IEnumerable<ApiNode> Members => m_Members.Values.ToList();
 
 
@@ -47,7 +62,19 @@ namespace AssemblyApi.ModelBuilder
 
         public ApiNode AddMember(string signature, string @namespace, Accessibility symbolAccessibility, SymbolKind kind, string name, ILookup<string, string> attributes = null, long memberImportance = 0)
         {
-            return m_Members.GetOrAdd(signature, new ApiNode(signature, @namespace, symbolAccessibility, kind, name, attributes, memberImportance));
+            attributes = attributes ?? CreateEmptyLookup<string>();
+            var apiNode = new ApiNode(signature, @namespace, symbolAccessibility, kind, name, attributes.ToDictionary(), memberImportance);
+            return AddMember(apiNode);
+        }
+
+        private ApiNode AddMember(ApiNode apiNode)
+        {
+            return m_Members.GetOrAdd(apiNode.Signature, apiNode);
+        }
+
+        private static ILookup<T, T> CreateEmptyLookup<T>()
+        {
+            return new T[0].ToLookup(_ => _, _ => _);
         }
 
         public void RemoveDescendantsWhere(Predicate<ApiNode> predicate)
@@ -67,6 +94,5 @@ namespace AssemblyApi.ModelBuilder
         {
             return $"Signature: {Signature}, Importance: {Importance}, Namespace: {Namespace}, Member count: {Members.Count()}";
         }
-
     }
 }
