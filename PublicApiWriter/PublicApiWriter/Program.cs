@@ -39,7 +39,7 @@ namespace AssemblyApi
         {
             var solutionNodes = await ApiReader.ReadApiFromProjects(solutionOrProjectFilePath, cancellationToken);
             new ApiFilter(printerConfig).ApplyTo(solutionNodes);
-            await publicApiWriter.WriteHumanReadable(solutionNodes, outputFile, cancellationToken);
+            await publicApiWriter.WriteHumanReadable(solutionNodes, new FileInfo(outputFile), cancellationToken);
         }
 
         private static void PrintUsage()
