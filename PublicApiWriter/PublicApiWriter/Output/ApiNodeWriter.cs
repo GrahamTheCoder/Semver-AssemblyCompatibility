@@ -25,7 +25,11 @@ namespace AssemblyApi.Output
 
         private static IOrderedEnumerable<ApiNode> MembersInCanonicalOrder(ApiNode apiNode)
         {
-            return apiNode.Members.OrderBy(m => m.Importance).ThenBy(m => m.Kind == Namespace).ThenBy(m => m.Name);
+            return apiNode.Members
+                .OrderByDescending(m => m.SymbolAccessibility)
+                .ThenBy(m => m.Importance)
+                .ThenBy(m => m.Kind == Namespace)
+                .ThenBy(m => m.Name);
         }
 
         private async Task WriteMembers(ApiNode parentNode, TextWriter file, CancellationToken cancellationToken, IOrderedEnumerable<ApiNode> orderedMembers)
