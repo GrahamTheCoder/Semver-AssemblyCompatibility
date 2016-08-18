@@ -58,11 +58,15 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ApiFilterTests.cs" />
+    <Compile Include="BinaryApiCompatibility.cs" />
     <Compile Include="Builders\ApiNodeBuilder.cs" />
     <Compile Include="ComparisonTests.cs" />
     <Compile Include="SelfTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="SemanticVersionExtensions.cs" />
+    <Compile Include="SinglePackageComparisonTests.cs" />
     <Compile Include="Utils\TempFileManager.cs" />
+    <Compile Include="Versions.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

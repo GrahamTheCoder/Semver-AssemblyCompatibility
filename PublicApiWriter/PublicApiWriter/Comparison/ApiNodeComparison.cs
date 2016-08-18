@@ -95,8 +95,8 @@ namespace AssemblyApi.Comparison
 
     internal enum SignatureDifferenceType
     {
-        Added,
         SignatureSame,
+        Added,
         SignatureEdited,
         Removed
     }
