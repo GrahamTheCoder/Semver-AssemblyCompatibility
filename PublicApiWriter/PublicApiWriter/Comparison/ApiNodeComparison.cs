@@ -2,18 +2,34 @@
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using AssemblyApi.ModelBuilder;
 using JetBrains.Annotations;
-using Microsoft.CodeAnalysis;
 
 namespace AssemblyApi.Comparison
 {
-    internal sealed class ApiNodeComparison
+    internal sealed class ApiNodeComparison : IApiNodeComparison
     {
         public IApiNode OldApiNode { get;}
         public IApiNode NewApiNode { get;}
         public IReadOnlyCollection<IApiNodeComparison> MemberComparison{ get; }
+
+        public SignatureDifferenceType SignatureDifferenceType
+        {
+            get
+            {
+                return OldApiNode == null
+                    ? SignatureDifferenceType.Added
+                    : NewApiNode == null
+                        ? SignatureDifferenceType.Removed
+                        : OldApiNode.Signature == NewApiNode.Signature
+                            ? SignatureDifferenceType.SignatureSame
+                            : SignatureDifferenceType.SignatureEdited;
+            }
+        }
+
+        private IEnumerable<IApiNodeComparison> DifferentMembers => MemberComparison.Where(n => n.IsDifferent);
+
+        public bool IsDifferent => SignatureDifferenceType != SignatureDifferenceType.SignatureSame || DifferentMembers.Any();
 
         private ApiNodeComparison([CanBeNull] IApiNode oldApiNode, [CanBeNull] IApiNode newApiNode, IEnumerable<ApiNodeComparison> memberComparison)
         {
@@ -75,5 +91,13 @@ namespace AssemblyApi.Comparison
             return $"{Name}: {SymbolAccessibility}, {Kind}";
         }
 
+    }
+
+    internal enum SignatureDifferenceType
+    {
+        Added,
+        SignatureSame,
+        SignatureEdited,
+        Removed
     }
 }

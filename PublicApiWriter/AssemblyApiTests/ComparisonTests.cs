@@ -8,6 +8,7 @@ using AssemblyApi.ModelBuilder;
 using AssemblyApi.Output;
 using AssemblyApiTests.Builders;
 using NUnit.Framework;
+using NUnit.Framework.Constraints;
 using NUnit.Framework.Internal;
 using static Microsoft.CodeAnalysis.Accessibility;
 using static Microsoft.CodeAnalysis.SymbolKind;
@@ -19,12 +20,28 @@ namespace AssemblyApiTests
     public class ComparisonTests
     {
         [Test]
-        public void ComparisonIsEqual()
+        public void IdenticalAssembliesAreEqual()
         {
             var oldApi = CreateApi("1");
             var newApi = CreateApi("1");
             var comparison = Compare(oldApi, newApi);
-            Assert.That(comparison, Is.Not.Empty);
+            Assert.That(GetDifferences(comparison),
+                Has.All.Matches<IApiNodeComparison>(n => !n.IsDifferent));
+        }
+
+        [Test]
+        public void TotallyDifferentAssembliesAreNotEqual()
+        {
+            var oldApi = CreateApi("1");
+            var newApi = CreateApi("2");
+            var comparison = Compare(oldApi, newApi);
+            Assert.That(GetDifferences(comparison),
+                Has.All.Matches<IApiNodeComparison>(n => n.IsDifferent));
+        }
+
+        private IEnumerable<IApiNodeComparison> GetDifferences(IReadOnlyCollection<ApiNodeComparison> comparison)
+        {
+            return comparison.Select(n => new DifferentOnlyApiNodeComparison(n));
         }
 
         private static IReadOnlyCollection<ApiNodeComparison> Compare(IApiNode oldApi, IApiNode newApi)

@@ -103,6 +103,8 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Comparison\ApiNodeComparison.cs" />
+    <Compile Include="Comparison\DifferentOnlyApiNodeComparison.cs" />
+    <Compile Include="Comparison\IApiNodeComparison.cs" />
     <Compile Include="Extensions\LookupExtensions.cs" />
     <Compile Include="ModelBuilder\ApiNode.cs" />
     <Compile Include="ModelBuilder\ApiReader.cs" />

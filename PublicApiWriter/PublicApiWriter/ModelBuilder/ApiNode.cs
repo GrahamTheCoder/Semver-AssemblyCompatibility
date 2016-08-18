@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
@@ -75,19 +74,6 @@ namespace AssemblyApi.ModelBuilder
         private static ILookup<T, T> CreateEmptyLookup<T>()
         {
             return new T[0].ToLookup(_ => _, _ => _);
-        }
-
-        public void RemoveDescendantsWhere(Predicate<IApiNode> predicate)
-        {
-            foreach (var key in m_Members.Keys)
-            {
-                ApiNode value;
-                if (m_Members.TryGetValue(key, out value) && predicate(value))
-                {
-                    ApiNode node;
-                    m_Members.TryRemove(key, out node);
-                }
-            }
         }
 
         public override string ToString()
