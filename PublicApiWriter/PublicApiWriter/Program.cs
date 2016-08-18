@@ -12,7 +12,7 @@ namespace AssemblyApi
     internal static class Program
     {
         /// <summary>
-        /// Call will an array of:
+        /// Call with an array of:
         /// Solution or project file path,
         /// Output file path to write API to,
         /// Namespace inclusion regexes (semicolon separated),
