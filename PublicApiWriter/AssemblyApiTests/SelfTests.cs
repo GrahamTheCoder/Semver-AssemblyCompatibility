@@ -44,7 +44,7 @@ namespace AssemblyApiTests
             }
         }
 
-        private static FileInfo WriteHumanReadable(IReadOnlyCollection<ApiNode> apiNodes, TempFileManager tempFileManager)
+        private static FileInfo WriteHumanReadable(IReadOnlyCollection<IApiNode> apiNodes, TempFileManager tempFileManager)
         {
             var outputFile = tempFileManager.GetNew();
             new PublicApiWriter().WriteHumanReadable(apiNodes, outputFile, CancellationToken.None).Wait();

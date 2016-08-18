@@ -11,11 +11,11 @@ namespace AssemblyApi.Comparison
 {
     internal sealed class ApiNodeComparison
     {
-        public ApiNode OldApiNode { get;}
-        public ApiNode NewApiNode { get;}
-        public IReadOnlyCollection<ApiNodeComparison> MemberComparison{ get; }
+        public IApiNode OldApiNode { get;}
+        public IApiNode NewApiNode { get;}
+        public IReadOnlyCollection<IApiNodeComparison> MemberComparison{ get; }
 
-        private ApiNodeComparison([CanBeNull] ApiNode oldApiNode, [CanBeNull] ApiNode newApiNode, IEnumerable<ApiNodeComparison> memberComparison)
+        private ApiNodeComparison([CanBeNull] IApiNode oldApiNode, [CanBeNull] IApiNode newApiNode, IEnumerable<ApiNodeComparison> memberComparison)
         {
             OldApiNode = oldApiNode;
             NewApiNode = newApiNode;
@@ -23,13 +23,13 @@ namespace AssemblyApi.Comparison
         }
 
         /// <returns>A list of nodes with an <see cref="ApiNodeComparison"/> for each <seealso cref="ApiNode"/> in either the <paramref name="oldApi"/> or <paramref name="newApi"/></returns>
-        public static IReadOnlyCollection<ApiNodeComparison> Compare(IEnumerable<ApiNode> oldApi, IEnumerable<ApiNode> newApi)
+        public static IReadOnlyCollection<ApiNodeComparison> Compare(IEnumerable<IApiNode> oldApi, IEnumerable<IApiNode> newApi)
         {
             var nodeComparisons = new List<ApiNodeComparison>();
-            var newApiByName = new ConcurrentDictionary<string, ApiNode>(newApi.ToDictionary(node => node.Name, node => node));
+            var newApiByName = new ConcurrentDictionary<string, IApiNode>(newApi.ToDictionary(node => node.Name, node => node));
             foreach (var oldApiNode in oldApi)
             {
-                ApiNode newApiNode;
+                IApiNode newApiNode;
                 var inNewApi = newApiByName.TryRemove(oldApiNode.Signature, out newApiNode);
                 if (inNewApi)
                 {
@@ -48,7 +48,7 @@ namespace AssemblyApi.Comparison
             return nodeComparisons;
         }
 
-        private string Describe(Func<ApiNode, string> func)
+        private string Describe(Func<IApiNode, string> func)
         {
             if (OldApiNode == null) return func(NewApiNode);
             if (NewApiNode == null) return func(OldApiNode);

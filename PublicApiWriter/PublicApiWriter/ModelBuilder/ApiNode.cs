@@ -8,7 +8,7 @@ using Newtonsoft.Json;
 
 namespace AssemblyApi.ModelBuilder
 {
-    internal sealed class ApiNode
+    internal sealed class ApiNode : IApiNode
     {
         private readonly ConcurrentDictionary<string, ApiNode> m_Members = new ConcurrentDictionary<string, ApiNode>();
 
@@ -52,15 +52,15 @@ namespace AssemblyApi.ModelBuilder
 
         public Dictionary<string, List<string>> Attributes { get; }
 
-        public IEnumerable<ApiNode> Members => m_Members.Values.ToList();
+        public IEnumerable<IApiNode> Members => m_Members.Values.ToList();
 
 
-        public static ApiNode CreateAssemblyRoot(string assemblyName)
+        internal static ApiNode CreateAssemblyRoot(string assemblyName)
         {
             return new ApiNode("assembly " + assemblyName, assemblyName, Accessibility.Public, SymbolKind.Assembly, assemblyName);
         }
 
-        public ApiNode AddMember(string signature, string @namespace, Accessibility symbolAccessibility, SymbolKind kind, string name, ILookup<string, string> attributes = null, long memberImportance = 0)
+        internal ApiNode AddMember(string signature, string @namespace, Accessibility symbolAccessibility, SymbolKind kind, string name, ILookup<string, string> attributes = null, long memberImportance = 0)
         {
             attributes = attributes ?? CreateEmptyLookup<string>();
             var apiNode = new ApiNode(signature, @namespace, symbolAccessibility, kind, name, attributes.ToDictionary(), memberImportance);
@@ -77,7 +77,7 @@ namespace AssemblyApi.ModelBuilder
             return new T[0].ToLookup(_ => _, _ => _);
         }
 
-        public void RemoveDescendantsWhere(Predicate<ApiNode> predicate)
+        public void RemoveDescendantsWhere(Predicate<IApiNode> predicate)
         {
             foreach (var key in m_Members.Keys)
             {

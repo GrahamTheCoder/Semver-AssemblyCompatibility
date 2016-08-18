@@ -34,7 +34,7 @@ namespace AssemblyApiTests.Builders
             return topLevel;
         }
 
-        private ApiNode AddAsChildOf(ApiNode parent)
+        private IApiNode AddAsChildOf(ApiNode parent)
         {
             var newMember = parent.AddMember(m_Signature, (parent.Namespace + "." + m_Name).TrimStart('.'), m_SymbolAccessibility, m_SymbolKind, m_Name);
             AddMembersAsChildrenOf(newMember);

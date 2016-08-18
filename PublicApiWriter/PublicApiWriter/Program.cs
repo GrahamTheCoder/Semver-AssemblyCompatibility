@@ -38,8 +38,8 @@ namespace AssemblyApi
         private static async Task WritePublicApi(PublicApiWriter publicApiWriter, PrinterConfig printerConfig, string solutionOrProjectFilePath, string outputFile, CancellationToken cancellationToken)
         {
             var solutionNodes = await ApiReader.ReadApiFromProjects(solutionOrProjectFilePath, cancellationToken);
-            new ApiFilter(printerConfig).ApplyTo(solutionNodes);
-            await publicApiWriter.WriteHumanReadable(solutionNodes, new FileInfo(outputFile), cancellationToken);
+            var filteredNodes = FilteredApiNode.For(printerConfig, solutionNodes);
+            await publicApiWriter.WriteHumanReadable(filteredNodes, new FileInfo(outputFile), cancellationToken);
         }
 
         private static void PrintUsage()

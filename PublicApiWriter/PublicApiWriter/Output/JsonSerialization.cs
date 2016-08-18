@@ -10,7 +10,7 @@ namespace AssemblyApi.Output
 {
     internal static class JsonSerialization
     {
-        public static void WriteJson(IEnumerable<ApiNode> nodes, FileInfo outputFile)
+        public static void WriteJson(IEnumerable<IApiNode> nodes, FileInfo outputFile)
         {
             var orderedNodes = nodes.OrderBy(n => n.Name).ToList();
             var serializer = new JsonSerializer() {Formatting = Formatting.None};
@@ -21,7 +21,7 @@ namespace AssemblyApi.Output
             }
         }
 
-        public static IReadOnlyCollection<ApiNode> ReadJson(FileInfo outputFile)
+        public static IReadOnlyCollection<IApiNode> ReadJson(FileInfo outputFile)
         {
             using (var fileReader = new StreamReader(outputFile.FullName))
             using (var jsonReader = new JsonTextReader(fileReader))

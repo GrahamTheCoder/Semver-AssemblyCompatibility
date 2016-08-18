@@ -19,7 +19,7 @@ namespace AssemblyApi.Output
             m_ApiNodeWriter = new ApiNodeWriter();
         }
 
-        public async Task WriteHumanReadable(IEnumerable<ApiNode> nodes, FileInfo outputFile, CancellationToken cancellationToken)
+        public async Task WriteHumanReadable(IEnumerable<IApiNode> nodes, FileInfo outputFile, CancellationToken cancellationToken)
         {
             using (var file = new StreamWriter(outputFile.FullName, false))
             {

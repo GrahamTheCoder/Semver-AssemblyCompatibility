@@ -1,4 +1,6 @@
-﻿using AssemblyApi.ModelBuilder;
+﻿using System.Collections.Generic;
+using System.Linq;
+using AssemblyApi.ModelBuilder;
 using AssemblyApi.Output;
 using AssemblyApiTests.Builders;
 using Microsoft.CodeAnalysis;
@@ -19,11 +21,9 @@ namespace AssemblyApiTests
             var type = new ApiNodeBuilder(NamedType, typeAccessibility);
             var namespaceNode = new ApiNodeBuilder(Namespace, signature: "Api.Tests").WithMembers(type);
             var assemblyNode = new ApiNodeBuilder(Assembly).WithMembers(namespaceNode).Build();
-            var apiFilter = new ApiFilter(new PrinterConfig("", namespaceExclusionRegex));
+            var filtered = GetFiltered(new PrinterConfig("", namespaceExclusionRegex), assemblyNode);
 
-            apiFilter.ApplyTo(new[] { assemblyNode });
-
-            Assert.That(assemblyNode.Members, Has.Count.EqualTo(expectedMembers));
+            Assert.That(filtered.Members.Count(), Is.EqualTo(expectedMembers));
         }
 
         [Test]
@@ -33,11 +33,9 @@ namespace AssemblyApiTests
             var type = new ApiNodeBuilder(NamedType, Public);
             var namespaceNode = new ApiNodeBuilder(Namespace, signature: "Api.Tests").WithMembers(type);
             var assemblyNode = new ApiNodeBuilder(Assembly).WithMembers(namespaceNode).Build();
-            var apiFilter = new ApiFilter(new PrinterConfig(toIncludeRegex, ""));
+            var filtered = GetFiltered(new PrinterConfig(toIncludeRegex, ""), assemblyNode);
 
-            apiFilter.ApplyTo(new[] { assemblyNode });
-
-            Assert.That(assemblyNode.Members, Is.Not.Empty);
+            Assert.That(filtered.Members, Is.Not.Empty);
         }
 
         [Test]
@@ -47,11 +45,9 @@ namespace AssemblyApiTests
             var type = new ApiNodeBuilder(NamedType, Public);
             var namespaceNode = new ApiNodeBuilder(Namespace, signature: "Api.Tests").WithMembers(type);
             var assemblyNode = new ApiNodeBuilder(Assembly).WithMembers(namespaceNode).Build();
-            var apiFilter = new ApiFilter(new PrinterConfig(toInclude, ""));
 
-            apiFilter.ApplyTo(new[] { assemblyNode });
-
-            Assert.That(assemblyNode.Members, Is.Empty);
+            var filtered = GetFiltered(new PrinterConfig(toInclude, ""), assemblyNode);
+            Assert.That(filtered.Members, Is.Empty);
         }
 
         [Test]
@@ -61,11 +57,14 @@ namespace AssemblyApiTests
             var type = new ApiNodeBuilder(NamedType, Public);
             var namespaceNode = new ApiNodeBuilder(Namespace, signature: "Api.Tests").WithMembers(type);
             var assemblyNode = new ApiNodeBuilder(Assembly).WithMembers(namespaceNode).Build();
-            var apiFilter = new ApiFilter(new PrinterConfig(namespaceRegex, namespaceRegex));
+            var filtered = GetFiltered(new PrinterConfig(namespaceRegex, namespaceRegex), assemblyNode);
 
-            apiFilter.ApplyTo(new[] { assemblyNode });
-
-            Assert.That(assemblyNode.Members, Is.Empty);
+            Assert.That(filtered.Members, Is.Empty);
         }
+        private static IApiNode GetFiltered(PrinterConfig printerConfig, IApiNode assemblyNode)
+        {
+            return FilteredApiNode.For(printerConfig, new[] { assemblyNode }).Single();
+        }
+
     }
 }

@@ -106,7 +106,8 @@
     <Compile Include="Extensions\LookupExtensions.cs" />
     <Compile Include="ModelBuilder\ApiNode.cs" />
     <Compile Include="ModelBuilder\ApiReader.cs" />
-    <Compile Include="ModelBuilder\ApiFilter.cs" />
+    <Compile Include="ModelBuilder\FilteredApiNode.cs" />
+    <Compile Include="ModelBuilder\IApiNode.cs" />
     <Compile Include="Output\ApiNodeWriter.cs" />
     <Compile Include="Output\JsonSerialization.cs" />
     <Compile Include="Output\PrinterConfig.cs" />

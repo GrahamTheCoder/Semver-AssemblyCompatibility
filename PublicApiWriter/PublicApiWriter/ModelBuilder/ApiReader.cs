@@ -25,7 +25,7 @@ namespace AssemblyApi.ModelBuilder
             m_Projects = projects;
         }
 
-        public static async Task<IReadOnlyCollection<ApiNode>> ReadApiFromProjects(string solutionFilePath, CancellationToken cancellationToken)
+        public static async Task<IReadOnlyCollection<IApiNode>> ReadApiFromProjects(string solutionFilePath, CancellationToken cancellationToken)
         {
             using (var msWorkspace = MSBuildWorkspace.Create(s_DefaultProperties))
             {
@@ -46,7 +46,7 @@ namespace AssemblyApi.ModelBuilder
             return new [] { await msWorkspace.OpenProjectAsync(solutionFilePath, cancellationToken)};
         }
 
-        public async Task<IReadOnlyCollection<ApiNode>> ReadProjects(CancellationToken token)
+        public async Task<IReadOnlyCollection<IApiNode>> ReadProjects(CancellationToken token)
         {
             var projectNodes = m_Projects.Select(project => CreateAssemblyNode(token, project));
             return await Task.WhenAll(projectNodes);

@@ -27,7 +27,7 @@ namespace AssemblyApiTests
             Assert.That(comparison, Is.Not.Empty);
         }
 
-        private static IReadOnlyCollection<ApiNodeComparison> Compare(ApiNode oldApi, ApiNode newApi)
+        private static IReadOnlyCollection<ApiNodeComparison> Compare(IApiNode oldApi, IApiNode newApi)
         {
             return ApiNodeComparison.Compare(new[] {oldApi}, new[] {newApi});
         }
