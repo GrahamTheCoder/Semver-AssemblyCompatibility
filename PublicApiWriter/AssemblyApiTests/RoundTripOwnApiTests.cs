@@ -7,9 +7,7 @@ using AssemblyApi;
 using AssemblyApi.Comparison;
 using AssemblyApi.ModelBuilder;
 using AssemblyApi.Output;
-using AssemblyApiTests;
 using AssemblyApiTests.Utils;
-using Microsoft.CodeAnalysis;
 using NUnit.Framework;
 
 namespace AssemblyApiTests
@@ -19,18 +17,18 @@ namespace AssemblyApiTests
     {
         private readonly FileInfo m_ThisProjectFile;
         private readonly Lazy<IReadOnlyCollection<IApiNode>> m_LazyThisProjectApi;
+        private readonly Lazy<IReadOnlyCollection<IApiNode>> m_LazyRoundTrippedProjectApi;
 
         public RoundTripOwnApiTests()
         {
             var solutionDirectory = new DirectoryInfo(Environment.CurrentDirectory + @"\..\..\");
             m_ThisProjectFile = solutionDirectory.GetFiles("*.csproj").First();
             m_LazyThisProjectApi = new Lazy<IReadOnlyCollection<IApiNode>>(() => ApiReader.ReadApiFromProjects(m_ThisProjectFile.FullName, CancellationToken.None).Result);
+            m_LazyRoundTrippedProjectApi = new Lazy<IReadOnlyCollection<IApiNode>>(() => RoundTripApi(ThisProjectApi));
         }
 
-        private IReadOnlyCollection<IApiNode> ThisProjectApi
-        {
-            get { return m_LazyThisProjectApi.Value; }
-        }
+        private IReadOnlyCollection<IApiNode> ThisProjectApi => m_LazyThisProjectApi.Value;
+        private IReadOnlyCollection<IApiNode> RoundTrippedProjectApi => m_LazyRoundTrippedProjectApi.Value;
 
 
         private static IReadOnlyCollection<IApiNode> RoundTripApi(IReadOnlyCollection<IApiNode> originalApiNodes)
@@ -51,7 +49,7 @@ namespace AssemblyApiTests
                 var expectedContents = WriteHumanReadable(ThisProjectApi, tempFileManager);
                 var expectedApi = File.ReadAllText(expectedContents.FullName);
 
-                var deserializedApiNodes = RoundTripApi(ThisProjectApi);
+                var deserializedApiNodes = RoundTrippedProjectApi;
                 var actualContents = WriteHumanReadable(deserializedApiNodes, tempFileManager);
 
                 var actualApi = File.ReadAllText(actualContents.FullName);
@@ -62,16 +60,14 @@ namespace AssemblyApiTests
         [Test]
         public void ExactSameMembersIsBinaryIdentical()
         {
-            var deserializedApiNodes = RoundTripApi(ThisProjectApi);
-
-            var compatibility = GetApiCompatiblity(ThisProjectApi, deserializedApiNodes);
+            var compatibility = GetApiCompatiblity(ThisProjectApi, RoundTrippedProjectApi);
             Assert.That(compatibility, Is.EqualTo(BinaryApiCompatibility.Identical));
         }
 
         [Test]
         public void AddingMembersIsBinaryBackwardsCompatible()
         {
-                var publicRoundTrippedNodes = FilteredApiNode.For(new PrinterConfig("", ""), RoundTripApi(ThisProjectApi));
+                var publicRoundTrippedNodes = FilteredApiNode.For(new PrinterConfig("", ""), RoundTrippedProjectApi);
 
                 var compatibility = GetApiCompatiblity(publicRoundTrippedNodes, ThisProjectApi);
                 Assert.That(compatibility, Is.EqualTo(BinaryApiCompatibility.BackwardsCompatible));
@@ -80,7 +76,7 @@ namespace AssemblyApiTests
         [Test]
         public void RemovingMembersIsBinaryIncompatible()
         {
-            var publicRoundTrippedNodes = FilteredApiNode.For(new PrinterConfig("", ""), RoundTripApi(ThisProjectApi));
+            var publicRoundTrippedNodes = FilteredApiNode.For(new PrinterConfig("", ""), RoundTrippedProjectApi);
 
             var compatibility = GetApiCompatiblity(ThisProjectApi, publicRoundTrippedNodes);
             Assert.That(compatibility, Is.EqualTo(BinaryApiCompatibility.Incompatible));
