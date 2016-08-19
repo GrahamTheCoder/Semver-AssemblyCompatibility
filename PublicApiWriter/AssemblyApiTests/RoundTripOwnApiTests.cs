@@ -2,42 +2,56 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Text;
 using System.Threading;
-using System.Threading.Tasks;
 using AssemblyApi;
 using AssemblyApi.Comparison;
 using AssemblyApi.ModelBuilder;
 using AssemblyApi.Output;
+using AssemblyApiTests;
 using AssemblyApiTests.Utils;
+using Microsoft.CodeAnalysis;
 using NUnit.Framework;
 
 namespace AssemblyApiTests
 {
     [TestFixture]
-    public class SelfSerializationTests
+    public class RoundTripOwnApiTests
     {
         private readonly FileInfo m_ThisProjectFile;
+        private readonly Lazy<IReadOnlyCollection<IApiNode>> m_LazyThisProjectApi;
 
-        public SelfSerializationTests()
+        public RoundTripOwnApiTests()
         {
             var solutionDirectory = new DirectoryInfo(Environment.CurrentDirectory + @"\..\..\");
             m_ThisProjectFile = solutionDirectory.GetFiles("*.csproj").First();
+            m_LazyThisProjectApi = new Lazy<IReadOnlyCollection<IApiNode>>(() => ApiReader.ReadApiFromProjects(m_ThisProjectFile.FullName, CancellationToken.None).Result);
         }
 
+        private IReadOnlyCollection<IApiNode> ThisProjectApi
+        {
+            get { return m_LazyThisProjectApi.Value; }
+        }
+
+
+        private static IReadOnlyCollection<IApiNode> RoundTripApi(IReadOnlyCollection<IApiNode> originalApiNodes)
+        {
+            using (var tempFileManager = new TempFileManager())
+            {
+                var outputFile = tempFileManager.GetNew();
+                JsonSerialization.WriteJson(originalApiNodes, outputFile);
+                return JsonSerialization.ReadJson(outputFile);
+            }
+        }
 
         [Test]
         public void RoundTripSerializationOfOwnApi()
         {
             using (var tempFileManager = new TempFileManager())
             {
-                var outputFile = tempFileManager.GetNew();
-                var originalApiNodes = ApiReader.ReadApiFromProjects(m_ThisProjectFile.FullName, CancellationToken.None).Result;
-                var expectedContents = WriteHumanReadable(originalApiNodes, tempFileManager);
+                var expectedContents = WriteHumanReadable(ThisProjectApi, tempFileManager);
                 var expectedApi = File.ReadAllText(expectedContents.FullName);
 
-                JsonSerialization.WriteJson(originalApiNodes, outputFile);
-                var deserializedApiNodes = JsonSerialization.ReadJson(outputFile);
+                var deserializedApiNodes = RoundTripApi(ThisProjectApi);
                 var actualContents = WriteHumanReadable(deserializedApiNodes, tempFileManager);
 
                 var actualApi = File.ReadAllText(actualContents.FullName);
@@ -46,27 +60,39 @@ namespace AssemblyApiTests
         }
 
         [Test]
-        public void RoundtrippedApiIsBinaryIdentical()
+        public void ExactSameMembersIsBinaryIdentical()
         {
-            using (var tempFileManager = new TempFileManager())
-            {
-                var outputFile = tempFileManager.GetNew();
-                var originalApiNodes = ApiReader.ReadApiFromProjects(m_ThisProjectFile.FullName, CancellationToken.None).Result;
-                JsonSerialization.WriteJson(originalApiNodes, outputFile);
-                var deserializedApiNodes = JsonSerialization.ReadJson(outputFile);
+            var deserializedApiNodes = RoundTripApi(ThisProjectApi);
 
-                var compatibility = GetApiCompatiblity(deserializedApiNodes, originalApiNodes);
-                Assert.That(compatibility, Is.EqualTo(BinaryApiCompatibility.Identical));
-            }
+            var compatibility = GetApiCompatiblity(ThisProjectApi, deserializedApiNodes);
+            Assert.That(compatibility, Is.EqualTo(BinaryApiCompatibility.Identical));
         }
 
-        private BinaryApiCompatibility GetApiCompatiblity(IReadOnlyCollection<IApiNode> deserializedApiNodes, IReadOnlyCollection<IApiNode> originalApiNodes)
+        [Test]
+        public void AddingMembersIsBinaryBackwardsCompatible()
+        {
+                var publicRoundTrippedNodes = FilteredApiNode.For(new PrinterConfig("", ""), RoundTripApi(ThisProjectApi));
+
+                var compatibility = GetApiCompatiblity(publicRoundTrippedNodes, ThisProjectApi);
+                Assert.That(compatibility, Is.EqualTo(BinaryApiCompatibility.BackwardsCompatible));
+        }
+
+        [Test]
+        public void RemovingMembersIsBinaryIncompatible()
+        {
+            var publicRoundTrippedNodes = FilteredApiNode.For(new PrinterConfig("", ""), RoundTripApi(ThisProjectApi));
+
+            var compatibility = GetApiCompatiblity(ThisProjectApi, publicRoundTrippedNodes);
+            Assert.That(compatibility, Is.EqualTo(BinaryApiCompatibility.Incompatible));
+        }
+
+        private BinaryApiCompatibility GetApiCompatiblity(IEnumerable<IApiNode> originalApi, IEnumerable<IApiNode> newApi)
         {
             var binaryApiComparer = new BinaryApiComparer();
-            return binaryApiComparer.GetApiChangeType(ApiNodeComparison.Compare(originalApiNodes, deserializedApiNodes));
+            return binaryApiComparer.GetApiChangeType(ApiNodeComparison.Compare(originalApi, newApi));
         }
 
-        private static FileInfo WriteHumanReadable(IReadOnlyCollection<IApiNode> apiNodes, TempFileManager tempFileManager)
+        private static FileInfo WriteHumanReadable(IEnumerable<IApiNode> apiNodes, TempFileManager tempFileManager)
         {
             var outputFile = tempFileManager.GetNew();
             new PublicApiWriter().WriteHumanReadable(apiNodes, outputFile, CancellationToken.None).Wait();
@@ -92,11 +118,11 @@ namespace AssemblyApiTests
         [Test]
         public void ThisTestAttributeFound()
         {
-                var api = ApiReader.ReadApiFromProjects(m_ThisProjectFile.FullName, CancellationToken.None).Result;
+                var api = ThisProjectApi;
 
                 var thisTest = api.First().Members
                     .First(m => m.Name == nameof(AssemblyApiTests)).Members
-                    .First(m => m.Name == nameof(SelfSerializationTests)).Members
+                    .First(m => m.Name == nameof(RoundTripOwnApiTests)).Members
                     .First(m => m.Name == nameof(ThisTestAttributeFound));
 
                 Assert.That(thisTest.Attributes.Keys, Contains.Item(nameof(TestAttribute)));

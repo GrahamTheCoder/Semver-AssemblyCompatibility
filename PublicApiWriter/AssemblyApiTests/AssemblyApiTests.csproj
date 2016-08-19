@@ -63,7 +63,7 @@
     <Compile Include="SemVer\BinaryApiCompatibility.cs" />
     <Compile Include="Builders\ApiNodeBuilder.cs" />
     <Compile Include="ComparisonTests.cs" />
-    <Compile Include="SelfSerializationTests.cs" />
+    <Compile Include="RoundTripOwnApiTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SemVer\SemanticVersionExtensions.cs" />
     <Compile Include="Utils\TempFileManager.cs" />
