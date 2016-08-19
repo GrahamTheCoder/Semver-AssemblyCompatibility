@@ -42,11 +42,11 @@ namespace AssemblyApi.Comparison
         public static IReadOnlyCollection<ApiNodeComparison> Compare(IEnumerable<IApiNode> oldApi, IEnumerable<IApiNode> newApi)
         {
             var nodeComparisons = new List<ApiNodeComparison>();
-            var newApiByName = new ConcurrentDictionary<string, IApiNode>(newApi.ToDictionary(node => node.Name, node => node));
+            var newApiBySignature = new ConcurrentDictionary<string, IApiNode>(newApi.ToDictionary(node => node.Signature, node => node));
             foreach (var oldApiNode in oldApi)
             {
                 IApiNode newApiNode;
-                var inNewApi = newApiByName.TryRemove(oldApiNode.Signature, out newApiNode);
+                var inNewApi = newApiBySignature.TryRemove(oldApiNode.Signature, out newApiNode);
                 if (inNewApi)
                 {
                     var memberComparison = Compare(oldApiNode.Members, newApiNode.Members);
@@ -58,7 +58,7 @@ namespace AssemblyApi.Comparison
                 }
             }
 
-            nodeComparisons.AddRange(newApiByName.Values
+            nodeComparisons.AddRange(newApiBySignature.Values
                 .Select(newApiNode => new ApiNodeComparison(null, newApiNode, Compare(new ApiNode[0], newApiNode.Members))));
 
             return nodeComparisons;

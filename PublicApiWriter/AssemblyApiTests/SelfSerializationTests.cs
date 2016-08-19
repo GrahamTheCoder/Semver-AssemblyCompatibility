@@ -6,6 +6,7 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using AssemblyApi;
+using AssemblyApi.Comparison;
 using AssemblyApi.ModelBuilder;
 using AssemblyApi.Output;
 using AssemblyApiTests.Utils;
@@ -14,11 +15,11 @@ using NUnit.Framework;
 namespace AssemblyApiTests
 {
     [TestFixture]
-    public class SelfTests
+    public class SelfSerializationTests
     {
         private readonly FileInfo m_ThisProjectFile;
 
-        public SelfTests()
+        public SelfSerializationTests()
         {
             var solutionDirectory = new DirectoryInfo(Environment.CurrentDirectory + @"\..\..\");
             m_ThisProjectFile = solutionDirectory.GetFiles("*.csproj").First();
@@ -42,6 +43,27 @@ namespace AssemblyApiTests
                 var actualApi = File.ReadAllText(actualContents.FullName);
                 Assert.That(actualApi, Is.EqualTo(expectedApi));
             }
+        }
+
+        [Test]
+        public void RoundtrippedApiIsBinaryIdentical()
+        {
+            using (var tempFileManager = new TempFileManager())
+            {
+                var outputFile = tempFileManager.GetNew();
+                var originalApiNodes = ApiReader.ReadApiFromProjects(m_ThisProjectFile.FullName, CancellationToken.None).Result;
+                JsonSerialization.WriteJson(originalApiNodes, outputFile);
+                var deserializedApiNodes = JsonSerialization.ReadJson(outputFile);
+
+                var compatibility = GetApiCompatiblity(deserializedApiNodes, originalApiNodes);
+                Assert.That(compatibility, Is.EqualTo(BinaryApiCompatibility.Identical));
+            }
+        }
+
+        private BinaryApiCompatibility GetApiCompatiblity(IReadOnlyCollection<IApiNode> deserializedApiNodes, IReadOnlyCollection<IApiNode> originalApiNodes)
+        {
+            var binaryApiComparer = new BinaryApiComparer();
+            return binaryApiComparer.GetApiChangeType(ApiNodeComparison.Compare(originalApiNodes, deserializedApiNodes));
         }
 
         private static FileInfo WriteHumanReadable(IReadOnlyCollection<IApiNode> apiNodes, TempFileManager tempFileManager)
@@ -74,7 +96,7 @@ namespace AssemblyApiTests
 
                 var thisTest = api.First().Members
                     .First(m => m.Name == nameof(AssemblyApiTests)).Members
-                    .First(m => m.Name == nameof(SelfTests)).Members
+                    .First(m => m.Name == nameof(SelfSerializationTests)).Members
                     .First(m => m.Name == nameof(ThisTestAttributeFound));
 
                 Assert.That(thisTest.Attributes.Keys, Contains.Item(nameof(TestAttribute)));
