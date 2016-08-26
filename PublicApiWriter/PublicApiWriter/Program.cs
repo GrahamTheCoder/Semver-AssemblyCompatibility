@@ -21,9 +21,10 @@ namespace AssemblyApi
         internal static void Main(string[] args)
         {
             var solutionOrProjectFilePath = args.ElementAtOrDefault(0);
-            var outputFile = args.ElementAtOrDefault(1) ?? "out.txt";
-            var includeRegexes = (args.ElementAtOrDefault(2) ?? "");
-            var excludeRegexes = (args.ElementAtOrDefault(3) ?? "");
+            var humanReadableOutputFile = args.ElementAtOrDefault(1) ?? "out.txt";
+            var computerReadableOutputFile = args.ElementAtOrDefault(2) ?? "out.json";
+            var includeRegexes = (args.ElementAtOrDefault(3) ?? "");
+            var excludeRegexes = (args.ElementAtOrDefault(4) ?? "");
 
             if (string.IsNullOrEmpty(solutionOrProjectFilePath) || !File.Exists(solutionOrProjectFilePath))
             {
@@ -32,14 +33,16 @@ namespace AssemblyApi
             }
 
             var printerConfig = new PrinterConfig(includeRegexes, excludeRegexes);
-            WritePublicApi(new PublicApiWriter(), printerConfig, solutionOrProjectFilePath, outputFile, new CancellationTokenSource().Token).Wait();
+            WritePublicApi(new PublicApiWriter(), printerConfig, solutionOrProjectFilePath, humanReadableOutputFile, computerReadableOutputFile, new CancellationTokenSource().Token).Wait();
         }
 
-        private static async Task WritePublicApi(PublicApiWriter publicApiWriter, PrinterConfig printerConfig, string solutionOrProjectFilePath, string outputFile, CancellationToken cancellationToken)
+        private static async Task WritePublicApi(PublicApiWriter publicApiWriter, PrinterConfig printerConfig, string solutionOrProjectFilePath, string humanReadableFileName, string jsonFileName, CancellationToken cancellationToken)
         {
             var solutionNodes = await ApiReader.ReadApiFromProjects(solutionOrProjectFilePath, cancellationToken);
-            var filteredNodes = FilteredApiNode.For(printerConfig, solutionNodes);
-            await publicApiWriter.WriteHumanReadable(filteredNodes, new FileInfo(outputFile), cancellationToken);
+            var filteredNodes = FilteredApiNode.For(printerConfig, solutionNodes).ToList();
+            var writeHumanReadable = publicApiWriter.WriteHumanReadable(filteredNodes, new FileInfo(humanReadableFileName), cancellationToken);
+            JsonSerialization.WriteJson(filteredNodes, new FileInfo(jsonFileName));
+            await writeHumanReadable;
         }
 
         private static void PrintUsage()

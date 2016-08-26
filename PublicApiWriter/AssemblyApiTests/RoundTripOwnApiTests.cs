@@ -100,9 +100,10 @@ namespace AssemblyApiTests
         {
             using (var tempFileManager = new TempFileManager())
             {
-                var outputFile = tempFileManager.GetNew();
-                RunMain(m_ThisProjectFile.FullName, outputFile.FullName, "TestCode;AssemblyApiTests", @"OurCode;AssemblyApi\.");
-                var lines = File.ReadAllLines(outputFile.FullName);
+                var humanReadableFile = tempFileManager.GetNew();
+                var computerReadableFile = tempFileManager.GetNew();
+                RunMain(m_ThisProjectFile, humanReadableFile, computerReadableFile, "TestCode;AssemblyApiTests", @"OurCode;AssemblyApi\.");
+                var lines = File.ReadAllLines(humanReadableFile.FullName);
 
                 var linesContainingThisMethod = lines.Where(l => l.Contains(nameof(AnalyzingSelfFindsThisMethodAndOtherStuff))).ToList();
                 Assert.That(linesContainingThisMethod, Has.Count.EqualTo(1));
@@ -124,9 +125,9 @@ namespace AssemblyApiTests
                 Assert.That(thisTest.Attributes.Keys, Contains.Item(nameof(TestAttribute)));
         }
 
-        private static void RunMain(string solutionPath, string outputFile, string inclusionRegexes, string exclusionRegexes)
+        private static void RunMain(FileInfo solution, FileInfo humanReadableFile, FileInfo computerReadableFile, string inclusionRegexes, string exclusionRegexes)
         {
-            Program.Main(new [] {solutionPath, outputFile, inclusionRegexes, exclusionRegexes});
+            Program.Main(new [] {solution.FullName, humanReadableFile.FullName, computerReadableFile.FullName, inclusionRegexes, exclusionRegexes});
         }
     }
 }
