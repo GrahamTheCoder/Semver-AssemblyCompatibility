@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using Gtc.AssemblyApi.Comparison;
 using Gtc.AssemblyApi.ModelBuilder;
 using Gtc.AssemblyApiTests.SemVer;
@@ -10,6 +11,7 @@ namespace Gtc.AssemblyApiTests
     public class ComparisonTests
     {
         private readonly BinaryApiComparer m_BinaryApiComparer = new BinaryApiComparer();
+        private readonly ComparisonExtensions m_ComparisonExtensions = new ComparisonExtensions();
 
         [Test]
         public void IdenticalAssembliesAreEqual()
@@ -41,12 +43,13 @@ namespace Gtc.AssemblyApiTests
         }
 
         [Test]
-        public void SemVerIncompatible()
+        public void GivenIncompatibleApiThenMajorVersionIncreases()
         {
             var oldApi = ApiBuilder.CreateApi("1");
             var newApi = ApiBuilder.CreateApi("2");
             var comparison = Compare(oldApi, newApi);
-            Assert.That(m_BinaryApiComparer.GetApiChangeType(comparison), Is.EqualTo(BinaryApiCompatibility.Incompatible));
+            
+            Assert.That(ComparisonExtensions.GetNewSemanticVersion(comparison, new Version(1,0,0,0)).AssemblyFileVersion.Major, Is.EqualTo(2));
         }
 
 

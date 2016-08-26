@@ -60,6 +60,7 @@
     <Compile Include="ApiBuilder.cs" />
     <Compile Include="ApiFilterTests.cs" />
     <Compile Include="BinaryApiComparer.cs" />
+    <Compile Include="ComparisonExtensions.cs" />
     <Compile Include="SemVer\BinaryApiCompatibility.cs" />
     <Compile Include="Builders\ApiNodeBuilder.cs" />
     <Compile Include="ComparisonTests.cs" />

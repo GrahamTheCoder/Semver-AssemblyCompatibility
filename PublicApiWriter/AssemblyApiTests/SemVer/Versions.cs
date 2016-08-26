@@ -4,7 +4,7 @@ using System.Diagnostics;
 namespace Gtc.AssemblyApiTests.SemVer
 {
     [DebuggerDisplay("{AssemblyFileVersion.ToString()}")]
-    internal class Versions
+    public class Versions
     {
         public BinaryApiCompatibility Compatibility { get; private set; }
 
