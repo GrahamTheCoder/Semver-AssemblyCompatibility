@@ -116,6 +116,11 @@
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="IO\PublicApiWriter.cs" />
+    <Compile Include="SemVer\BinaryApiComparer.cs" />
+    <Compile Include="SemVer\BinaryApiCompatibility.cs" />
+    <Compile Include="SemVer\ComparisonExtensions.cs" />
+    <Compile Include="SemVer\SemanticVersionExtensions.cs" />
+    <Compile Include="SemVer\Versions.cs" />
     <Compile Include="SymbolExtensions\SymbolFormatter.cs" />
     <Compile Include="SymbolExtensions\SymbolImportance.cs" />
     <Compile Include="SymbolExtensions\SymbolMembers.cs" />

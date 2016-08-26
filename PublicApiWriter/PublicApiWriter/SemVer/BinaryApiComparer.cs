@@ -2,9 +2,8 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using Gtc.AssemblyApi.Comparison;
-using Gtc.AssemblyApiTests.SemVer;
 
-namespace Gtc.AssemblyApiTests
+namespace Gtc.AssemblyApi.SemVer
 {
     internal class BinaryApiComparer
     {
@@ -26,7 +25,7 @@ namespace Gtc.AssemblyApiTests
 
         private SignatureDifferenceType HighestDifferenceLevel(IReadOnlyCollection<ApiNodeComparison> comparison)
         {
-            return comparison.Max(n => HighestDifferenceLevel(n));
+            return comparison.Max(n => HighestDifferenceLevel((IApiNodeComparison) n));
         }
 
         private static SignatureDifferenceType HighestDifferenceLevel(IApiNodeComparison nodeComparison)

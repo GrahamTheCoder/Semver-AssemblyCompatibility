@@ -1,4 +1,4 @@
-namespace Gtc.AssemblyApiTests.SemVer
+namespace Gtc.AssemblyApi.SemVer
 {
     public enum BinaryApiCompatibility
     {

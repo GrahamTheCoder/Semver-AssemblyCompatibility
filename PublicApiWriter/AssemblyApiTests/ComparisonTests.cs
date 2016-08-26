@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using Gtc.AssemblyApi.Comparison;
 using Gtc.AssemblyApi.ModelBuilder;
-using Gtc.AssemblyApiTests.SemVer;
+using Gtc.AssemblyApi.SemVer;
 using NUnit.Framework;
 
 namespace Gtc.AssemblyApiTests
@@ -48,7 +48,7 @@ namespace Gtc.AssemblyApiTests
             var oldApi = ApiBuilder.CreateApi("1");
             var newApi = ApiBuilder.CreateApi("2");
             var comparison = Compare(oldApi, newApi);
-            
+
             Assert.That(ComparisonExtensions.GetNewSemanticVersion(comparison, new Version(1,0,0,0)).AssemblyFileVersion.Major, Is.EqualTo(2));
         }
 

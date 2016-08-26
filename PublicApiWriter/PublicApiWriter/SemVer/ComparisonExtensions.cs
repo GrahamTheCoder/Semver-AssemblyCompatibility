@@ -1,9 +1,8 @@
 using System;
 using System.Collections.Generic;
 using Gtc.AssemblyApi.Comparison;
-using Gtc.AssemblyApiTests.SemVer;
 
-namespace Gtc.AssemblyApiTests
+namespace Gtc.AssemblyApi.SemVer
 {
     internal class ComparisonExtensions
     {
