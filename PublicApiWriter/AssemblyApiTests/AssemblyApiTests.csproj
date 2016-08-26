@@ -7,8 +7,8 @@
     <ProjectGuid>{DBE88E15-8DDF-48F2-8955-40960605E469}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>AssemblyApiTests</RootNamespace>
-    <AssemblyName>AssemblyApiTests</AssemblyName>
+    <RootNamespace>Gtc.AssemblyApiTests</RootNamespace>
+    <AssemblyName>Gtc.AssemblyApiTests</AssemblyName>
     <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <TargetFrameworkProfile />

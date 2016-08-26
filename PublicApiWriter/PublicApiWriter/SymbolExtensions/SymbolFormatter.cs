@@ -3,12 +3,8 @@ using System.Collections.Immutable;
 using System.Linq;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
-using static Microsoft.CodeAnalysis.SymbolDisplayMemberOptions;
-using static Microsoft.CodeAnalysis.SymbolDisplayKindOptions;
-using static Microsoft.CodeAnalysis.SymbolDisplayGenericsOptions;
-using static Microsoft.CodeAnalysis.SymbolDisplayParameterOptions;
 
-namespace AssemblyApi.SymbolExtensions
+namespace Gtc.AssemblyApi.SymbolExtensions
 {
     internal static class SymbolFormatter
     {
@@ -71,10 +67,10 @@ namespace AssemblyApi.SymbolExtensions
         {
             var defaultFormat = SymbolDisplayFormat.CSharpErrorMessageFormat;
             return defaultFormat
-                .WithMemberOptions(IncludeExplicitInterface | IncludeParameters | IncludeModifiers | SymbolDisplayMemberOptions.IncludeType)
-                .WithKindOptions(IncludeMemberKeyword | IncludeNamespaceKeyword | IncludeTypeKeyword)
-                .WithGenericsOptions(IncludeTypeConstraints | IncludeTypeParameters | IncludeVariance)
-                .WithParameterOptions(IncludeExtensionThis | IncludeOptionalBrackets | IncludeParamsRefOut | SymbolDisplayParameterOptions.IncludeType);
+                .WithMemberOptions(SymbolDisplayMemberOptions.IncludeExplicitInterface | SymbolDisplayMemberOptions.IncludeParameters | SymbolDisplayMemberOptions.IncludeModifiers | SymbolDisplayMemberOptions.IncludeType)
+                .WithKindOptions(SymbolDisplayKindOptions.IncludeMemberKeyword | SymbolDisplayKindOptions.IncludeNamespaceKeyword | SymbolDisplayKindOptions.IncludeTypeKeyword)
+                .WithGenericsOptions(SymbolDisplayGenericsOptions.IncludeTypeConstraints | SymbolDisplayGenericsOptions.IncludeTypeParameters | SymbolDisplayGenericsOptions.IncludeVariance)
+                .WithParameterOptions(SymbolDisplayParameterOptions.IncludeExtensionThis | SymbolDisplayParameterOptions.IncludeOptionalBrackets | SymbolDisplayParameterOptions.IncludeParamsRefOut | SymbolDisplayParameterOptions.IncludeType);
         }
 
     }

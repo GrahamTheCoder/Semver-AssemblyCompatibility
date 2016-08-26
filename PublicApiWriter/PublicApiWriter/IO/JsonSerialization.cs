@@ -1,10 +1,10 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using AssemblyApi.ModelBuilder;
+using Gtc.AssemblyApi.ModelBuilder;
 using Newtonsoft.Json;
 
-namespace AssemblyApi.IO
+namespace Gtc.AssemblyApi.IO
 {
     internal static class JsonSerialization
     {

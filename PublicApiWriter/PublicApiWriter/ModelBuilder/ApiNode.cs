@@ -1,11 +1,11 @@
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
-using AssemblyApi.Extensions;
+using Gtc.AssemblyApi.Extensions;
 using Microsoft.CodeAnalysis;
 using Newtonsoft.Json;
 
-namespace AssemblyApi.ModelBuilder
+namespace Gtc.AssemblyApi.ModelBuilder
 {
     internal sealed class ApiNode : IApiNode
     {

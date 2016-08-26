@@ -1,10 +1,9 @@
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using AssemblyApi.ModelBuilder;
+using Gtc.AssemblyApi.ModelBuilder;
 using Microsoft.CodeAnalysis;
 
-namespace AssemblyApiTests.Builders
+namespace Gtc.AssemblyApiTests.Builders
 {
     internal class ApiNodeBuilder
     {

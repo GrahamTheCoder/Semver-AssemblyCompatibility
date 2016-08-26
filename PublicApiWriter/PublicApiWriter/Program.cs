@@ -3,11 +3,10 @@ using System.IO;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using AssemblyApi.IO;
-using AssemblyApi.ModelBuilder;
-using Newtonsoft.Json;
+using Gtc.AssemblyApi.IO;
+using Gtc.AssemblyApi.ModelBuilder;
 
-namespace AssemblyApi
+namespace Gtc.AssemblyApi
 {
     internal static class Program
     {

@@ -3,14 +3,15 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading;
-using AssemblyApi;
-using AssemblyApi.Comparison;
-using AssemblyApi.IO;
-using AssemblyApi.ModelBuilder;
-using AssemblyApiTests.Utils;
+using Gtc.AssemblyApi;
+using Gtc.AssemblyApi.Comparison;
+using Gtc.AssemblyApi.IO;
+using Gtc.AssemblyApi.ModelBuilder;
+using Gtc.AssemblyApiTests.SemVer;
+using Gtc.AssemblyApiTests.Utils;
 using NUnit.Framework;
 
-namespace AssemblyApiTests
+namespace Gtc.AssemblyApiTests
 {
     [TestFixture]
     public class RoundTripOwnApiTests

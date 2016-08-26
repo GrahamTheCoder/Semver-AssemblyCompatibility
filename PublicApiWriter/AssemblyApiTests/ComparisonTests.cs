@@ -1,10 +1,10 @@
 ﻿using System.Collections.Generic;
-using AssemblyApi.Comparison;
-using AssemblyApi.ModelBuilder;
+using Gtc.AssemblyApi.Comparison;
+using Gtc.AssemblyApi.ModelBuilder;
+using Gtc.AssemblyApiTests.SemVer;
 using NUnit.Framework;
 
-
-namespace AssemblyApiTests
+namespace Gtc.AssemblyApiTests
 {
     [TestFixture]
     public class ComparisonTests

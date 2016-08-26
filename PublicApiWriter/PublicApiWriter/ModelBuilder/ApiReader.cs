@@ -1,13 +1,12 @@
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using AssemblyApi.SymbolExtensions;
+using Gtc.AssemblyApi.SymbolExtensions;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.MSBuild;
 
-namespace AssemblyApi.ModelBuilder
+namespace Gtc.AssemblyApi.ModelBuilder
 {
     internal class ApiReader
     {

@@ -8,8 +8,8 @@
     <ProjectGuid>{910019F8-C942-47F0-92BE-2B3E641B156D}</ProjectGuid>
     <OutputType>Exe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>AssemblyApi</RootNamespace>
-    <AssemblyName>AssemblyApi</AssemblyName>
+    <RootNamespace>Gtc.AssemblyApi</RootNamespace>
+    <AssemblyName>Gtc.AssemblyApi</AssemblyName>
     <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <TargetFrameworkProfile />
@@ -34,7 +34,7 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <PropertyGroup>
-    <StartupObject>AssemblyApi.Program</StartupObject>
+    <StartupObject>Gtc.AssemblyApi.Program</StartupObject>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="JetBrains.Annotations, Version=10.0.0.0, Culture=neutral, PublicKeyToken=1010a0d8d6380325, processorArchitecture=MSIL">

@@ -4,10 +4,10 @@ using System.IO;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using AssemblyApi.ModelBuilder;
+using Gtc.AssemblyApi.ModelBuilder;
 using Microsoft.CodeAnalysis;
 
-namespace AssemblyApi.IO
+namespace Gtc.AssemblyApi.IO
 {
     internal class ApiNodeWriter
     {

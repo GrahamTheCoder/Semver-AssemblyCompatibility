@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 
-namespace AssemblyApiTests.Utils
+namespace Gtc.AssemblyApiTests.Utils
 {
     public class TempFileManager : IDisposable
     {

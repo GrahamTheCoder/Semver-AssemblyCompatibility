@@ -1,9 +1,10 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using AssemblyApi.Comparison;
+using Gtc.AssemblyApi.Comparison;
+using Gtc.AssemblyApiTests.SemVer;
 
-namespace AssemblyApiTests
+namespace Gtc.AssemblyApiTests
 {
     internal class BinaryApiComparer
     {

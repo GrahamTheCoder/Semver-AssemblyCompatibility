@@ -2,7 +2,7 @@
 using System.Linq;
 using Microsoft.CodeAnalysis;
 
-namespace AssemblyApi.SymbolExtensions
+namespace Gtc.AssemblyApi.SymbolExtensions
 {
     internal static class SymbolMembers
     {

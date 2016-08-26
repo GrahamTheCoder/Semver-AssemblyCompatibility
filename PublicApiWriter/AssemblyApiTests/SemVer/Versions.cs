@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Diagnostics;
 
-namespace AssemblyApiTests
+namespace Gtc.AssemblyApiTests.SemVer
 {
     [DebuggerDisplay("{AssemblyFileVersion.ToString()}")]
     internal class Versions

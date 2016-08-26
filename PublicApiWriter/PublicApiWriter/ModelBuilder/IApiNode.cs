@@ -1,8 +1,7 @@
-using System;
 using System.Collections.Generic;
 using Microsoft.CodeAnalysis;
 
-namespace AssemblyApi.ModelBuilder
+namespace Gtc.AssemblyApi.ModelBuilder
 {
     internal interface IApiNode
     {

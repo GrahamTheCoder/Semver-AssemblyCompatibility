@@ -1,9 +1,9 @@
 using System.Collections.Generic;
 using System.Linq;
-using AssemblyApi.IO;
+using Gtc.AssemblyApi.IO;
 using Microsoft.CodeAnalysis;
 
-namespace AssemblyApi.ModelBuilder
+namespace Gtc.AssemblyApi.ModelBuilder
 {
     internal class FilteredApiNode : IApiNode
     {

@@ -1,8 +1,8 @@
-﻿using AssemblyApi.ModelBuilder;
-using AssemblyApiTests.Builders;
+﻿using Gtc.AssemblyApi.ModelBuilder;
+using Gtc.AssemblyApiTests.Builders;
 using Microsoft.CodeAnalysis;
 
-namespace AssemblyApiTests
+namespace Gtc.AssemblyApiTests
 {
     internal static class ApiBuilder
     {

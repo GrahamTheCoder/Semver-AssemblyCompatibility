@@ -1,6 +1,6 @@
 using System;
 
-namespace AssemblyApiTests
+namespace Gtc.AssemblyApiTests.SemVer
 {
     public static class SemanticVersionExtensions
     {

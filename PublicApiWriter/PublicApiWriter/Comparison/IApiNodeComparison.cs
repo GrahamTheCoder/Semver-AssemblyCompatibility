@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
-using AssemblyApi.ModelBuilder;
+using Gtc.AssemblyApi.ModelBuilder;
 
-namespace AssemblyApi.Comparison
+namespace Gtc.AssemblyApi.Comparison
 {
     internal interface IApiNodeComparison
     {

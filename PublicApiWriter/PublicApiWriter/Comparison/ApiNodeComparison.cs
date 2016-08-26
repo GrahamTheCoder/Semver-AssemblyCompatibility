@@ -2,10 +2,10 @@
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
-using AssemblyApi.ModelBuilder;
+using Gtc.AssemblyApi.ModelBuilder;
 using JetBrains.Annotations;
 
-namespace AssemblyApi.Comparison
+namespace Gtc.AssemblyApi.Comparison
 {
     internal sealed class ApiNodeComparison : IApiNodeComparison
     {

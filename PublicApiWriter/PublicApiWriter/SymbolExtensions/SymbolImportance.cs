@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using Microsoft.CodeAnalysis;
 
-namespace AssemblyApi.SymbolExtensions
+namespace Gtc.AssemblyApi.SymbolExtensions
 {
     internal static class SymbolImportance
     {

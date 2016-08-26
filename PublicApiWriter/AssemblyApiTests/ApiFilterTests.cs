@@ -1,38 +1,35 @@
-﻿using System.Collections.Generic;
-using System.Linq;
-using AssemblyApi.IO;
-using AssemblyApi.ModelBuilder;
-using AssemblyApiTests.Builders;
+﻿using System.Linq;
+using Gtc.AssemblyApi.IO;
+using Gtc.AssemblyApi.ModelBuilder;
+using Gtc.AssemblyApiTests.Builders;
 using Microsoft.CodeAnalysis;
 using NUnit.Framework;
-using static Microsoft.CodeAnalysis.Accessibility;
-using static Microsoft.CodeAnalysis.SymbolKind;
 
-namespace AssemblyApiTests
+namespace Gtc.AssemblyApiTests
 {
     [TestFixture]
     public class ApiFilterTests
     {
-        [TestCase(Public, @"SomeOtherNamespace", 1)]
-        [TestCase(Private, @"SomeOtherNamespace", 0)]
-        [TestCase(Public, @"Api\.Tests", 0)]
+        [TestCase(Accessibility.Public, @"SomeOtherNamespace", 1)]
+        [TestCase(Accessibility.Private, @"SomeOtherNamespace", 0)]
+        [TestCase(Accessibility.Public, @"Api\.Tests", 0)]
         public void NamespaceOnlyExcludedWhenContentsAreExcluded(Accessibility typeAccessibility, string namespaceExclusionRegex, int expectedMembers)
         {
-            var type = new ApiNodeBuilder(NamedType, typeAccessibility);
-            var namespaceNode = new ApiNodeBuilder(Namespace, signature: "Api.Tests").WithMembers(type);
-            var assemblyNode = new ApiNodeBuilder(Assembly).WithMembers(namespaceNode).Build();
+            var type = new ApiNodeBuilder(SymbolKind.NamedType, typeAccessibility);
+            var namespaceNode = new ApiNodeBuilder(SymbolKind.Namespace, signature: "Api.Tests").WithMembers(type);
+            var assemblyNode = new ApiNodeBuilder(SymbolKind.Assembly).WithMembers(namespaceNode).Build();
             var filtered = GetFiltered(new PrinterConfig("", namespaceExclusionRegex), assemblyNode);
 
-            Assert.That(filtered.Members.Count(), Is.EqualTo(expectedMembers));
+            Assert.That(filtered.Members.Count<IApiNode>(), Is.EqualTo(expectedMembers));
         }
 
         [Test]
         public void IncludedIfMatchedByInclude()
         {
             var toIncludeRegex = @"Api\.Tests";
-            var type = new ApiNodeBuilder(NamedType, Public);
-            var namespaceNode = new ApiNodeBuilder(Namespace, signature: "Api.Tests").WithMembers(type);
-            var assemblyNode = new ApiNodeBuilder(Assembly).WithMembers(namespaceNode).Build();
+            var type = new ApiNodeBuilder(SymbolKind.NamedType, Accessibility.Public);
+            var namespaceNode = new ApiNodeBuilder(SymbolKind.Namespace, signature: "Api.Tests").WithMembers(type);
+            var assemblyNode = new ApiNodeBuilder(SymbolKind.Assembly).WithMembers(namespaceNode).Build();
             var filtered = GetFiltered(new PrinterConfig(toIncludeRegex, ""), assemblyNode);
 
             Assert.That(filtered.Members, Is.Not.Empty);
@@ -42,9 +39,9 @@ namespace AssemblyApiTests
         public void AllExcludedIfDoNotMatchInclude()
         {
             var toInclude = "Api.NonExistent";
-            var type = new ApiNodeBuilder(NamedType, Public);
-            var namespaceNode = new ApiNodeBuilder(Namespace, signature: "Api.Tests").WithMembers(type);
-            var assemblyNode = new ApiNodeBuilder(Assembly).WithMembers(namespaceNode).Build();
+            var type = new ApiNodeBuilder(SymbolKind.NamedType, Accessibility.Public);
+            var namespaceNode = new ApiNodeBuilder(SymbolKind.Namespace, signature: "Api.Tests").WithMembers(type);
+            var assemblyNode = new ApiNodeBuilder(SymbolKind.Assembly).WithMembers(namespaceNode).Build();
 
             var filtered = GetFiltered(new PrinterConfig(toInclude, ""), assemblyNode);
             Assert.That(filtered.Members, Is.Empty);
@@ -54,9 +51,9 @@ namespace AssemblyApiTests
         public void ExcludeTakesPrecedenceOverInclude()
         {
             var namespaceRegex = @"Api\.Tests";
-            var type = new ApiNodeBuilder(NamedType, Public);
-            var namespaceNode = new ApiNodeBuilder(Namespace, signature: "Api.Tests").WithMembers(type);
-            var assemblyNode = new ApiNodeBuilder(Assembly).WithMembers(namespaceNode).Build();
+            var type = new ApiNodeBuilder(SymbolKind.NamedType, Accessibility.Public);
+            var namespaceNode = new ApiNodeBuilder(SymbolKind.Namespace, signature: "Api.Tests").WithMembers(type);
+            var assemblyNode = new ApiNodeBuilder(SymbolKind.Assembly).WithMembers(namespaceNode).Build();
             var filtered = GetFiltered(new PrinterConfig(namespaceRegex, namespaceRegex), assemblyNode);
 
             Assert.That(filtered.Members, Is.Empty);
