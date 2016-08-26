@@ -11,7 +11,6 @@ namespace Gtc.AssemblyApiTests
     public class ComparisonTests
     {
         private readonly BinaryApiComparer m_BinaryApiComparer = new BinaryApiComparer();
-        private readonly ComparisonExtensions m_ComparisonExtensions = new ComparisonExtensions();
 
         [Test]
         public void IdenticalAssembliesAreEqual()
@@ -19,7 +18,7 @@ namespace Gtc.AssemblyApiTests
             var oldApi = ApiBuilder.CreateApi("1");
             var newApi = ApiBuilder.CreateApi("1");
             var comparison = Compare(oldApi, newApi);
-            Assert.That(m_BinaryApiComparer.GetDifferences(comparison),
+            Assert.That(comparison.GetDifferences(),
                 Has.All.Matches<IApiNodeComparison>(n => !n.IsDifferent));
         }
 
@@ -29,7 +28,7 @@ namespace Gtc.AssemblyApiTests
             var oldApi = ApiBuilder.CreateApi("1");
             var newApi = ApiBuilder.CreateApi("2");
             var comparison = Compare(oldApi, newApi);
-            Assert.That(m_BinaryApiComparer.GetDifferences(comparison),
+            Assert.That(comparison.GetDifferences(),
                 Has.All.Matches<IApiNodeComparison>(n => n.IsDifferent));
         }
 
@@ -49,7 +48,7 @@ namespace Gtc.AssemblyApiTests
             var newApi = ApiBuilder.CreateApi("2");
             var comparison = Compare(oldApi, newApi);
 
-            Assert.That(ComparisonExtensions.GetNewSemanticVersion(comparison, new Version(1,0,0,0)).AssemblyFileVersion.Major, Is.EqualTo(2));
+            Assert.That(comparison.GetNewSemanticVersion(new Version(1,0,0,0)).AssemblyFileVersion.Major, Is.EqualTo(2));
         }
 
 

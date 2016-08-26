@@ -35,10 +35,5 @@ namespace Gtc.AssemblyApi.SemVer
                     .Concat(new[] {nodeComparison.SignatureDifferenceType})
                     .Max();
         }
-
-        public IEnumerable<IApiNodeComparison> GetDifferences(IReadOnlyCollection<ApiNodeComparison> comparison)
-        {
-            return comparison.Select(n => new DifferentOnlyApiNodeComparison(n));
-        }
     }
 }
