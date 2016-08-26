@@ -1,12 +1,10 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Threading;
-using System.Threading.Tasks;
 using AssemblyApi.ModelBuilder;
 using Newtonsoft.Json;
 
-namespace AssemblyApi.Output
+namespace AssemblyApi.IO
 {
     internal static class JsonSerialization
     {

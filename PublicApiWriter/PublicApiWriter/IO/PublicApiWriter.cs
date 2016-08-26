@@ -1,14 +1,11 @@
 using System.Collections.Generic;
 using System.IO;
-using System.IO.Compression;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using AssemblyApi.ModelBuilder;
-using Newtonsoft.Json;
-using Newtonsoft.Json.Bson;
 
-namespace AssemblyApi.Output
+namespace AssemblyApi.IO
 {
     internal class PublicApiWriter
     {

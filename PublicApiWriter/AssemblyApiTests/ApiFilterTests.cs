@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using AssemblyApi.IO;
 using AssemblyApi.ModelBuilder;
-using AssemblyApi.Output;
 using AssemblyApiTests.Builders;
 using Microsoft.CodeAnalysis;
 using NUnit.Framework;

@@ -1,6 +1,6 @@
 using System.Collections.Generic;
 using System.Linq;
-using AssemblyApi.Output;
+using AssemblyApi.IO;
 using Microsoft.CodeAnalysis;
 
 namespace AssemblyApi.ModelBuilder

@@ -3,7 +3,7 @@ using System.Linq;
 using System.Text.RegularExpressions;
 using Microsoft.CodeAnalysis;
 
-namespace AssemblyApi.Output
+namespace AssemblyApi.IO
 {
     internal class PrinterConfig
     {

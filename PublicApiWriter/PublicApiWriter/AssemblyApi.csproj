@@ -110,12 +110,12 @@
     <Compile Include="ModelBuilder\ApiReader.cs" />
     <Compile Include="ModelBuilder\FilteredApiNode.cs" />
     <Compile Include="ModelBuilder\IApiNode.cs" />
-    <Compile Include="Output\ApiNodeWriter.cs" />
-    <Compile Include="Output\JsonSerialization.cs" />
-    <Compile Include="Output\PrinterConfig.cs" />
+    <Compile Include="IO\ApiNodeWriter.cs" />
+    <Compile Include="IO\JsonSerialization.cs" />
+    <Compile Include="IO\PrinterConfig.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Output\PublicApiWriter.cs" />
+    <Compile Include="IO\PublicApiWriter.cs" />
     <Compile Include="SymbolExtensions\SymbolFormatter.cs" />
     <Compile Include="SymbolExtensions\SymbolImportance.cs" />
     <Compile Include="SymbolExtensions\SymbolMembers.cs" />

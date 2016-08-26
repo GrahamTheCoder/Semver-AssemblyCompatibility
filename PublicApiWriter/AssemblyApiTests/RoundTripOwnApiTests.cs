@@ -5,8 +5,8 @@ using System.Linq;
 using System.Threading;
 using AssemblyApi;
 using AssemblyApi.Comparison;
+using AssemblyApi.IO;
 using AssemblyApi.ModelBuilder;
-using AssemblyApi.Output;
 using AssemblyApiTests.Utils;
 using NUnit.Framework;
 
