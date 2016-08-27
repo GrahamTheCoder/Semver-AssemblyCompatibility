@@ -1,7 +1,6 @@
 ﻿using Gtc.AssemblyApi.Model;
-using Gtc.AssemblyApiTests.Builders;
 
-namespace Gtc.AssemblyApiTests
+namespace Gtc.AssemblyApiTests.Builders
 {
     internal static class ApiBuilder
     {

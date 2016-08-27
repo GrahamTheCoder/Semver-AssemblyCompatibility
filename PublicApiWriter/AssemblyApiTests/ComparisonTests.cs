@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using Gtc.AssemblyApi.Comparison;
 using Gtc.AssemblyApi.Model;
 using Gtc.AssemblyApi.SemVer;
+using Gtc.AssemblyApiTests.Builders;
 using NUnit.Framework;
 
 namespace Gtc.AssemblyApiTests

@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Gtc.AssemblyApi.Comparison;
 using Gtc.AssemblyApi.SemVer;
+using Gtc.AssemblyApiTests.Builders;
 using NUnit.Framework;
 
 namespace Gtc.AssemblyApiTests

@@ -57,8 +57,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="ApiBuilder.cs" />
     <Compile Include="ApiFilterTests.cs" />
+    <Compile Include="Builders\ApiBuilder.cs" />
     <Compile Include="Builders\ApiNodeBuilder.cs" />
     <Compile Include="ChangeReportTests.cs" />
     <Compile Include="ComparisonTests.cs" />
