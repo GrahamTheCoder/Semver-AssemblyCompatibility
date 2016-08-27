@@ -1,20 +1,54 @@
 ﻿using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
+using System.Threading;
+using System.Threading.Tasks;
+using Gtc.AssemblyApi.IO;
 using Gtc.AssemblyApi.Model;
 using JetBrains.Annotations;
 
 namespace Gtc.AssemblyApi.Comparison
 {
-    internal sealed class ApiNodeComparison : IApiNodeComparison
+    internal abstract class ApiNodeComparisonBase
     {
-        public IApiNode OldApiNode { get;}
-        public IApiNode NewApiNode { get;}
+        public abstract IApiNode OldApiNode { get; }
+        public abstract IApiNode NewApiNode { get; }
+        public abstract SignatureDifferenceType SignatureDifferenceType { get; }
+
+        protected async Task<string> DescribeChanges(IReadOnlyCollection<IApiNodeComparison> members)
+        {
+            using (var stringWriter = new StringWriter())
+            {
+                await ApiComparisonWriter.Write(members, stringWriter);
+                return stringWriter.ToString();
+            }
+        }
+
+        protected T GetMostRecent<T>(Func<IApiNode, T> describe)
+        {
+            switch (SignatureDifferenceType)
+            {
+                case SignatureDifferenceType.SignatureSame:
+                case SignatureDifferenceType.Added:
+                    return describe(NewApiNode);
+                case SignatureDifferenceType.Removed:
+                    return describe(OldApiNode);
+                default:
+                    throw new ArgumentOutOfRangeException();
+            }
+        }
+    }
+
+    internal sealed class ApiNodeComparison : ApiNodeComparisonBase, IApiNodeComparison
+    {
+        public override IApiNode OldApiNode { get;}
+        public override IApiNode NewApiNode { get;}
         public IReadOnlyCollection<IApiNodeComparison> MemberComparison{ get; }
 
-        public SignatureDifferenceType SignatureDifferenceType
+        public override SignatureDifferenceType SignatureDifferenceType
         {
             get
             {
@@ -68,47 +102,12 @@ namespace Gtc.AssemblyApi.Comparison
 
         public override string ToString()
         {
-            return DescribeChanges(MemberComparison);
-        }
-
-        private string DescribeChanges(IReadOnlyCollection<IApiNodeComparison> members)
-        {
-            var sb = new StringBuilder();
-            sb.AppendLine($"{ChangeTypeIndicator()} {Signature}");
-            foreach (var apiNodeComparison in members)
-            {
-                sb.AppendLine(apiNodeComparison.ToString());
-            }
-            return sb.ToString();
-        }
-
-        private string ChangeTypeIndicator()
-        {
-            switch (SignatureDifferenceType)
-            {
-                case SignatureDifferenceType.SignatureSame:
-                    return " ";
-                case SignatureDifferenceType.Added:
-                    return "+";
-                case SignatureDifferenceType.Removed:
-                    return "-";
-                default:
-                    throw new ArgumentOutOfRangeException();
-            }
+            return DescribeChanges(MemberComparison).Result;
         }
 
         public T Get<T>(Func<IApiNode, T> describe)
         {
-            switch (SignatureDifferenceType)
-            {
-                case SignatureDifferenceType.SignatureSame:
-                case SignatureDifferenceType.Added:
-                    return describe(NewApiNode);
-                case SignatureDifferenceType.Removed:
-                    return describe(OldApiNode);
-                default:
-                    throw new ArgumentOutOfRangeException();
-            }
+            return GetMostRecent(describe);
         }
     }
 }

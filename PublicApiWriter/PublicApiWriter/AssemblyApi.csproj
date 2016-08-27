@@ -111,6 +111,7 @@
     <Compile Include="Comparison\IApiNodeComparison.cs" />
     <Compile Include="Comparison\SignatureDifferenceType.cs" />
     <Compile Include="Extensions\LookupExtensions.cs" />
+    <Compile Include="IO\ApiComparisonWriter.cs" />
     <Compile Include="IO\PrettyNodeOrderComparer.cs" />
     <Compile Include="Model\Accessibility.cs" />
     <Compile Include="Model\ApiNode.cs" />

@@ -1,12 +1,15 @@
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
+using System.Threading.Tasks;
+using Gtc.AssemblyApi.IO;
 using Gtc.AssemblyApi.Model;
 
 namespace Gtc.AssemblyApi.Comparison
 {
-    internal sealed class DifferentOnlyApiNodeComparison : IApiNodeComparison
+    internal sealed class DifferentOnlyApiNodeComparison : ApiNodeComparisonBase, IApiNodeComparison
     {
         private readonly IApiNodeComparison m_ApiNodeComparison;
 
@@ -20,17 +23,17 @@ namespace Gtc.AssemblyApi.Comparison
             get { return m_ApiNodeComparison.MemberComparison.Where(n => n.IsDifferent).Select(n => new DifferentOnlyApiNodeComparison(n)).ToArray(); }
         }
 
-        public IApiNode OldApiNode
+        public override IApiNode OldApiNode
         {
             get { return m_ApiNodeComparison.OldApiNode; }
         }
 
-        public IApiNode NewApiNode
+        public override IApiNode NewApiNode
         {
             get { return m_ApiNodeComparison.NewApiNode; }
         }
 
-        public SignatureDifferenceType SignatureDifferenceType
+        public override SignatureDifferenceType SignatureDifferenceType
         {
             get { return m_ApiNodeComparison.SignatureDifferenceType; }
         }
@@ -52,7 +55,12 @@ namespace Gtc.AssemblyApi.Comparison
 
         public override string ToString()
         {
-            return m_ApiNodeComparison.DescribeChanges();
+            return DescribeChanges(MemberComparison).Result;
+        }
+
+        public T Get<T>(Func<IApiNode, T> describe)
+        {
+            return GetMostRecent(describe);
         }
     }
 }
