@@ -1,11 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using Gtc.AssemblyApi.Comparison;
-using Gtc.AssemblyApi.IO;
 using Gtc.AssemblyApi.Extensions;
 using Gtc.AssemblyApiTests.Builders;
 using NUnit.Framework;
