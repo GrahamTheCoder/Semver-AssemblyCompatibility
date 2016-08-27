@@ -1,5 +1,6 @@
 using System;
 using System.CodeDom.Compiler;
+using System.Collections;
 using System.IO;
 using System.Linq;
 using System.Threading;
@@ -23,11 +24,7 @@ namespace Gtc.AssemblyApi.IO
 
         private static IOrderedEnumerable<IApiNode> MembersInCanonicalOrder(IApiNode apiNode)
         {
-            return apiNode.Members
-                .OrderByDescending(m => m.SymbolAccessibility)
-                .ThenBy(m => m.Importance)
-                .ThenBy(m => m.Kind == SymbolKind.Namespace)
-                .ThenBy(m => m.Name);
+            return apiNode.Members.OrderBy(n => n, new PrettyNodeOrderComparer());
         }
 
         private async Task WriteMembers(IApiNode parentNode, TextWriter file, CancellationToken cancellationToken, IOrderedEnumerable<IApiNode> orderedMembers)
