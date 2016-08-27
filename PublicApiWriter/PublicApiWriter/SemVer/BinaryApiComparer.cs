@@ -7,7 +7,7 @@ namespace Gtc.AssemblyApi.SemVer
 {
     internal class BinaryApiComparer
     {
-        public BinaryApiCompatibility GetApiChangeType(IReadOnlyCollection<ApiNodeComparison> comparison)
+        public BinaryApiCompatibility GetApiChangeType(IEnumerable<ApiNodeComparison> comparison)
         {
             switch (HighestDifferenceLevel(comparison))
             {
@@ -22,9 +22,9 @@ namespace Gtc.AssemblyApi.SemVer
             }
         }
 
-        private SignatureDifferenceType HighestDifferenceLevel(IReadOnlyCollection<ApiNodeComparison> comparison)
+        private SignatureDifferenceType HighestDifferenceLevel(IEnumerable<ApiNodeComparison> comparison)
         {
-            return comparison.Max(n => HighestDifferenceLevel((IApiNodeComparison) n));
+            return comparison.Max(n => HighestDifferenceLevel(n));
         }
 
         private static SignatureDifferenceType HighestDifferenceLevel(IApiNodeComparison nodeComparison)

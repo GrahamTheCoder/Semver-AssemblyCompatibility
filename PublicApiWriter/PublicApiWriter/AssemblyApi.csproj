@@ -110,6 +110,7 @@
     <Compile Include="Comparison\DifferentOnlyApiNodeComparison.cs" />
     <Compile Include="Comparison\IApiNodeComparison.cs" />
     <Compile Include="Comparison\SignatureDifferenceType.cs" />
+    <Compile Include="Extensions\ComparisonExtensions.cs" />
     <Compile Include="Extensions\LookupExtensions.cs" />
     <Compile Include="IO\ApiComparisonWriter.cs" />
     <Compile Include="IO\PrettyNodeOrderComparer.cs" />
@@ -126,7 +127,6 @@
     <Compile Include="IO\PublicApiWriter.cs" />
     <Compile Include="SemVer\BinaryApiComparer.cs" />
     <Compile Include="SemVer\BinaryApiCompatibility.cs" />
-    <Compile Include="SemVer\ComparisonExtensions.cs" />
     <Compile Include="SemVer\SemanticVersionExtensions.cs" />
     <Compile Include="SemVer\Versions.cs" />
   </ItemGroup>
