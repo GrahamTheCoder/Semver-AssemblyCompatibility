@@ -2,6 +2,7 @@
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 using Gtc.AssemblyApi.Model;
 using JetBrains.Annotations;
 
@@ -21,15 +22,15 @@ namespace Gtc.AssemblyApi.Comparison
                     ? SignatureDifferenceType.Added
                     : NewApiNode == null
                         ? SignatureDifferenceType.Removed
-                        : OldApiNode.Signature == NewApiNode.Signature
-                            ? SignatureDifferenceType.SignatureSame
-                            : SignatureDifferenceType.SignatureEdited;
+                        : SignatureDifferenceType.SignatureSame;
             }
         }
 
         private IEnumerable<IApiNodeComparison> DifferentMembers => MemberComparison.Where(n => n.IsDifferent);
 
         public bool IsDifferent => SignatureDifferenceType != SignatureDifferenceType.SignatureSame || DifferentMembers.Any();
+        public string Name => Get(n => n.Name);
+        public string Signature => Get(n => n.Signature);
 
         private ApiNodeComparison([CanBeNull] IApiNode oldApiNode, [CanBeNull] IApiNode newApiNode, IEnumerable<ApiNodeComparison> memberComparison)
         {
@@ -64,40 +65,50 @@ namespace Gtc.AssemblyApi.Comparison
             return nodeComparisons;
         }
 
-        private string Describe(Func<IApiNode, string> func)
-        {
-            if (OldApiNode == null) return func(NewApiNode);
-            if (NewApiNode == null) return func(OldApiNode);
-
-            var oldDescription = func(OldApiNode);
-            var newDescription = func(NewApiNode);
-            return oldDescription != newDescription
-                ? $"{oldDescription} -> {newDescription}"
-                : oldDescription;
-        }
-
-        public string Kind => Describe(node => node.Kind.ToString());
-
-        public string Name => Describe(node => node.Name.ToString());
-
-        public string Namespace => Describe(node => node.Namespace.ToString());
-
-        public string Signature => Describe(node => node.Signature.ToString());
-
-        public string SymbolAccessibility => Describe(node => node.SymbolAccessibility.ToString());
 
         public override string ToString()
         {
-            return $"{Name}: {SymbolAccessibility}, {Kind}";
+            return DescribeChanges(MemberComparison);
         }
 
-    }
+        private string DescribeChanges(IReadOnlyCollection<IApiNodeComparison> members)
+        {
+            var sb = new StringBuilder();
+            sb.AppendLine($"{ChangeTypeIndicator()} {Signature}");
+            foreach (var apiNodeComparison in members)
+            {
+                sb.AppendLine(apiNodeComparison.ToString());
+            }
+            return sb.ToString();
+        }
 
-    internal enum SignatureDifferenceType
-    {
-        SignatureSame,
-        Added,
-        SignatureEdited,
-        Removed
+        private string ChangeTypeIndicator()
+        {
+            switch (SignatureDifferenceType)
+            {
+                case SignatureDifferenceType.SignatureSame:
+                    return " ";
+                case SignatureDifferenceType.Added:
+                    return "+";
+                case SignatureDifferenceType.Removed:
+                    return "-";
+                default:
+                    throw new ArgumentOutOfRangeException();
+            }
+        }
+
+        public T Get<T>(Func<IApiNode, T> describe)
+        {
+            switch (SignatureDifferenceType)
+            {
+                case SignatureDifferenceType.SignatureSame:
+                case SignatureDifferenceType.Added:
+                    return describe(NewApiNode);
+                case SignatureDifferenceType.Removed:
+                    return describe(OldApiNode);
+                default:
+                    throw new ArgumentOutOfRangeException();
+            }
+        }
     }
 }

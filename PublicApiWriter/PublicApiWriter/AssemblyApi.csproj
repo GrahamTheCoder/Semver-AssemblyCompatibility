@@ -109,6 +109,7 @@
     <Compile Include="Comparison\ApiNodeComparison.cs" />
     <Compile Include="Comparison\DifferentOnlyApiNodeComparison.cs" />
     <Compile Include="Comparison\IApiNodeComparison.cs" />
+    <Compile Include="Comparison\SignatureDifferenceType.cs" />
     <Compile Include="Extensions\LookupExtensions.cs" />
     <Compile Include="Model\Accessibility.cs" />
     <Compile Include="Model\ApiNode.cs" />

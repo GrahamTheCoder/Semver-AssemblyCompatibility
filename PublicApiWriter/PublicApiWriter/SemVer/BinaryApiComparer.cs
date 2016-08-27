@@ -15,7 +15,6 @@ namespace Gtc.AssemblyApi.SemVer
                     return BinaryApiCompatibility.Identical;
                 case SignatureDifferenceType.Added:
                     return BinaryApiCompatibility.BackwardsCompatible;
-                case SignatureDifferenceType.SignatureEdited:
                 case SignatureDifferenceType.Removed:
                     return BinaryApiCompatibility.Incompatible;
                 default:

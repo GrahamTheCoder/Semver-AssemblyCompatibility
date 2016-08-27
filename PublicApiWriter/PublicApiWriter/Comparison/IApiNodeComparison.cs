@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using Gtc.AssemblyApi.Model;
 
 namespace Gtc.AssemblyApi.Comparison
@@ -10,11 +11,9 @@ namespace Gtc.AssemblyApi.Comparison
         IReadOnlyCollection<IApiNodeComparison> MemberComparison { get; }
         SignatureDifferenceType SignatureDifferenceType { get; }
         bool IsDifferent { get; }
-        string Kind { get; }
         string Name { get; }
-        string Namespace { get; }
         string Signature { get; }
-        string SymbolAccessibility { get; }
         string ToString();
+        T Get<T>(Func<IApiNode, T> describe);
     }
 }
