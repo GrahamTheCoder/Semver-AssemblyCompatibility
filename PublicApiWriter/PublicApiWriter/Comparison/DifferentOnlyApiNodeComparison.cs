@@ -1,5 +1,7 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 using Gtc.AssemblyApi.ModelBuilder;
 
 namespace Gtc.AssemblyApi.Comparison
@@ -61,6 +63,33 @@ namespace Gtc.AssemblyApi.Comparison
         public string SymbolAccessibility
         {
             get { return m_ApiNodeComparison.SymbolAccessibility; }
+        }
+
+        public override string ToString()
+        {
+            var sb = new StringBuilder();
+            sb.AppendLine(GetChangeFirstLine());
+            foreach (var apiNodeComparison in MemberComparison)
+            {
+                sb.AppendLine(apiNodeComparison.ToString());
+            }
+            return sb.ToString();
+        }
+
+        private string GetChangeFirstLine()
+        {
+            switch (SignatureDifferenceType)
+            {
+                case SignatureDifferenceType.SignatureSame:
+                case SignatureDifferenceType.SignatureEdited:
+                    return m_ApiNodeComparison.ToString();
+                case SignatureDifferenceType.Added:
+                    return $"+ {m_ApiNodeComparison}";
+                case SignatureDifferenceType.Removed:
+                    return $"- {m_ApiNodeComparison}";
+                default:
+                    throw new ArgumentOutOfRangeException();
+            }
         }
     }
 }
