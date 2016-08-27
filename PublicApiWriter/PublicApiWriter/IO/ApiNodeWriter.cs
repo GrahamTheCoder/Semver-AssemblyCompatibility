@@ -5,7 +5,7 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Gtc.AssemblyApi.ModelBuilder;
-using Microsoft.CodeAnalysis;
+using Gtc.AssemblyApi.ModelBuilder.Properties;
 
 namespace Gtc.AssemblyApi.IO
 {

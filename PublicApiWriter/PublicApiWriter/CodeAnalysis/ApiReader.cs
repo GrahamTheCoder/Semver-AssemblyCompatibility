@@ -2,11 +2,15 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using Gtc.AssemblyApi.SymbolExtensions;
+using Gtc.AssemblyApi.ModelBuilder;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.MSBuild;
+using Accessibility = Gtc.AssemblyApi.ModelBuilder.Properties.Accessibility;
+using SymbolKind = Gtc.AssemblyApi.ModelBuilder.Properties.SymbolKind;
+using MsAccessibility = Microsoft.CodeAnalysis.Accessibility;
+using MsSymbolKind = Microsoft.CodeAnalysis.SymbolKind;
 
-namespace Gtc.AssemblyApi.ModelBuilder
+namespace Gtc.AssemblyApi.CodeAnalysis
 {
     internal class ApiReader
     {
@@ -17,7 +21,7 @@ namespace Gtc.AssemblyApi.ModelBuilder
             {"SemanticAnalysisOnly", "true"},
         };
 
-        private static readonly SymbolKind[] NonApiSymbolKinds = {SymbolKind.Alias , SymbolKind.Preprocessing, SymbolKind.Label};
+        private static readonly MsSymbolKind[] NonApiSymbolKinds = { MsSymbolKind.Alias , MsSymbolKind.Preprocessing, MsSymbolKind.Label};
 
         public ApiReader(IEnumerable<Project> projects)
         {
@@ -83,16 +87,22 @@ namespace Gtc.AssemblyApi.ModelBuilder
             var memberImportance = symbol.GetImportance();
             var presentedAccessibility = GetPresentedAccessibility(symbol);
             var attributes = symbol.GetAttributes().ToLookup(a => a.AttributeClass.Name, a => string.Join(", ", a.ConstructorArguments.Select(x => x.Value.ToString())));
-            var apiNode = parentNode.AddMember(signature, symbolNamespace, presentedAccessibility, symbol.Kind, symbol.Name, attributes, memberImportance);
+            var apiNode = parentNode.AddMember(signature, symbolNamespace, presentedAccessibility, GetPresentedKind(symbol), symbol.Name, attributes, memberImportance);
             AddMembers(apiNode, symbol, cancellationToken);
             return apiNode;
         }
 
+        private static SymbolKind GetPresentedKind(ISymbol symbol)
+        {
+            return (SymbolKind) symbol.Kind;
+        }
+
         private static Accessibility GetPresentedAccessibility(ISymbol symbol)
         {
-            return symbol.Kind == SymbolKind.Field && symbol.ContainingType.TypeKind == TypeKind.Enum
-                ? Accessibility.NotApplicable
+            var msAccessiblity = symbol.Kind == MsSymbolKind.Field && symbol.ContainingType.TypeKind == TypeKind.Enum
+                ? MsAccessibility.NotApplicable
                 : symbol.DeclaredAccessibility;
+            return (Accessibility) msAccessiblity;
         }
 
         private void AddMembers(ApiNode parent, ISymbol symbol, CancellationToken cancellationToken)

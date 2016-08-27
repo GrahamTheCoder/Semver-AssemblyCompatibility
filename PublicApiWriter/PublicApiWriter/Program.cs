@@ -3,6 +3,7 @@ using System.IO;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using Gtc.AssemblyApi.CodeAnalysis;
 using Gtc.AssemblyApi.IO;
 using Gtc.AssemblyApi.ModelBuilder;
 

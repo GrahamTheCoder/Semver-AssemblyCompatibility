@@ -102,17 +102,22 @@
     <Reference Include="System.Xml.Linq" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="CodeAnalysis\ApiReader.cs" />
+    <Compile Include="CodeAnalysis\SymbolFormatter.cs" />
+    <Compile Include="CodeAnalysis\SymbolImportance.cs" />
+    <Compile Include="CodeAnalysis\SymbolMembers.cs" />
     <Compile Include="Comparison\ApiNodeComparison.cs" />
     <Compile Include="Comparison\DifferentOnlyApiNodeComparison.cs" />
     <Compile Include="Comparison\IApiNodeComparison.cs" />
     <Compile Include="Extensions\LookupExtensions.cs" />
     <Compile Include="ModelBuilder\ApiNode.cs" />
-    <Compile Include="ModelBuilder\ApiReader.cs" />
     <Compile Include="ModelBuilder\FilteredApiNode.cs" />
     <Compile Include="ModelBuilder\IApiNode.cs" />
     <Compile Include="IO\ApiNodeWriter.cs" />
     <Compile Include="IO\JsonSerialization.cs" />
     <Compile Include="IO\PrinterConfig.cs" />
+    <Compile Include="ModelBuilder\Properties\Accessibility.cs" />
+    <Compile Include="ModelBuilder\Properties\SymbolKind.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="IO\PublicApiWriter.cs" />
@@ -121,9 +126,6 @@
     <Compile Include="SemVer\ComparisonExtensions.cs" />
     <Compile Include="SemVer\SemanticVersionExtensions.cs" />
     <Compile Include="SemVer\Versions.cs" />
-    <Compile Include="SymbolExtensions\SymbolFormatter.cs" />
-    <Compile Include="SymbolExtensions\SymbolImportance.cs" />
-    <Compile Include="SymbolExtensions\SymbolMembers.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
@@ -132,6 +134,7 @@
     <Analyzer Include="..\packages\Microsoft.CodeAnalysis.Analyzers.1.1.0\analyzers\dotnet\cs\Microsoft.CodeAnalysis.Analyzers.dll" />
     <Analyzer Include="..\packages\Microsoft.CodeAnalysis.Analyzers.1.1.0\analyzers\dotnet\cs\Microsoft.CodeAnalysis.CSharp.Analyzers.dll" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

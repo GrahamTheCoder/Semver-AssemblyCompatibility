@@ -1,8 +1,8 @@
 ﻿using System.Linq;
 using Gtc.AssemblyApi.IO;
 using Gtc.AssemblyApi.ModelBuilder;
+using Gtc.AssemblyApi.ModelBuilder.Properties;
 using Gtc.AssemblyApiTests.Builders;
-using Microsoft.CodeAnalysis;
 using NUnit.Framework;
 
 namespace Gtc.AssemblyApiTests

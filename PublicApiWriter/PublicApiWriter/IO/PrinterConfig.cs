@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Linq;
 using System.Text.RegularExpressions;
-using Microsoft.CodeAnalysis;
+using Gtc.AssemblyApi.ModelBuilder.Properties;
 
 namespace Gtc.AssemblyApi.IO
 {

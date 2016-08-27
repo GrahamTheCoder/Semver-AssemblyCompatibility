@@ -4,7 +4,7 @@ using System.Linq;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 
-namespace Gtc.AssemblyApi.SymbolExtensions
+namespace Gtc.AssemblyApi.CodeAnalysis
 {
     internal static class SymbolFormatter
     {

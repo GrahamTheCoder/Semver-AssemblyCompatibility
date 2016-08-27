@@ -1,6 +1,6 @@
 ﻿using Gtc.AssemblyApi.ModelBuilder;
+using Gtc.AssemblyApi.ModelBuilder.Properties;
 using Gtc.AssemblyApiTests.Builders;
-using Microsoft.CodeAnalysis;
 
 namespace Gtc.AssemblyApiTests
 {

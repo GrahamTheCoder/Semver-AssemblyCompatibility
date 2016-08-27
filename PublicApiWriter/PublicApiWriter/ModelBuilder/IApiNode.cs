@@ -1,5 +1,5 @@
 using System.Collections.Generic;
-using Microsoft.CodeAnalysis;
+using Gtc.AssemblyApi.ModelBuilder.Properties;
 
 namespace Gtc.AssemblyApi.ModelBuilder
 {
