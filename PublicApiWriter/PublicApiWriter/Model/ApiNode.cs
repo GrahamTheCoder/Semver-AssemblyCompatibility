@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Gtc.AssemblyApi.Extensions;
 using Gtc.AssemblyApi.Model;
+using JetBrains.Annotations;
 using Newtonsoft.Json;
 
 namespace Gtc.AssemblyApi.ModelBuilder
@@ -11,7 +12,7 @@ namespace Gtc.AssemblyApi.ModelBuilder
     {
         private readonly ConcurrentDictionary<string, ApiNode> m_Members = new ConcurrentDictionary<string, ApiNode>();
 
-        [JsonConstructor]
+        [JsonConstructor, UsedImplicitly]
         private ApiNode(string signature, string @namespace, Accessibility symbolAccessibility, SymbolKind kind,
             string name, Dictionary<string, List<string>> attributes, long importance,
             IEnumerable<ApiNode> members)
