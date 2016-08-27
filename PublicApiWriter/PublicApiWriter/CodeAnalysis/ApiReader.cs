@@ -5,8 +5,8 @@ using System.Threading.Tasks;
 using Gtc.AssemblyApi.ModelBuilder;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.MSBuild;
-using Accessibility = Gtc.AssemblyApi.ModelBuilder.Properties.Accessibility;
-using SymbolKind = Gtc.AssemblyApi.ModelBuilder.Properties.SymbolKind;
+using Accessibility = Gtc.AssemblyApi.Model.Accessibility;
+using SymbolKind = Gtc.AssemblyApi.Model.SymbolKind;
 using MsAccessibility = Microsoft.CodeAnalysis.Accessibility;
 using MsSymbolKind = Microsoft.CodeAnalysis.SymbolKind;
 

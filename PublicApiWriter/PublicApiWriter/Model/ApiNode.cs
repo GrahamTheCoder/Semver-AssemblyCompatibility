@@ -2,7 +2,7 @@ using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 using Gtc.AssemblyApi.Extensions;
-using Gtc.AssemblyApi.ModelBuilder.Properties;
+using Gtc.AssemblyApi.Model;
 using Newtonsoft.Json;
 
 namespace Gtc.AssemblyApi.ModelBuilder

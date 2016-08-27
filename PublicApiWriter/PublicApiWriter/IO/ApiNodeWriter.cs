@@ -4,8 +4,8 @@ using System.IO;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using Gtc.AssemblyApi.Model;
 using Gtc.AssemblyApi.ModelBuilder;
-using Gtc.AssemblyApi.ModelBuilder.Properties;
 
 namespace Gtc.AssemblyApi.IO
 {

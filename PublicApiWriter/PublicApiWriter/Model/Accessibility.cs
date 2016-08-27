@@ -1,4 +1,4 @@
-namespace Gtc.AssemblyApi.ModelBuilder.Properties
+namespace Gtc.AssemblyApi.Model
 {
     public enum Accessibility
     {

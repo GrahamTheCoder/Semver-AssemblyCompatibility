@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using Gtc.AssemblyApi.IO;
-using Gtc.AssemblyApi.ModelBuilder.Properties;
+using Gtc.AssemblyApi.Model;
 
 namespace Gtc.AssemblyApi.ModelBuilder
 {
