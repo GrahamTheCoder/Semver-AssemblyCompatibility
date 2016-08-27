@@ -7,7 +7,7 @@ namespace Gtc.AssemblyApiTests.Utils
     public class TempFileManager : IDisposable
     {
         private readonly List<FileInfo> m_Files = new List<FileInfo>();
-        private DirectoryInfo m_TempDirectory;
+        private readonly DirectoryInfo m_TempDirectory;
 
         public TempFileManager()
         {
