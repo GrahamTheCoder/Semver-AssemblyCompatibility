@@ -2,7 +2,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using Gtc.AssemblyApi.ModelBuilder;
+using Gtc.AssemblyApi.Model;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.MSBuild;
 using Accessibility = Gtc.AssemblyApi.Model.Accessibility;

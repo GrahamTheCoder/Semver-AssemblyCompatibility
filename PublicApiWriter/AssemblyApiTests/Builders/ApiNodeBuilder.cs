@@ -1,7 +1,6 @@
 using System.Collections.Generic;
 using System.IO;
 using Gtc.AssemblyApi.Model;
-using Gtc.AssemblyApi.ModelBuilder;
 
 namespace Gtc.AssemblyApiTests.Builders
 {

@@ -5,7 +5,6 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Gtc.AssemblyApi.Model;
-using Gtc.AssemblyApi.ModelBuilder;
 
 namespace Gtc.AssemblyApi.IO
 {

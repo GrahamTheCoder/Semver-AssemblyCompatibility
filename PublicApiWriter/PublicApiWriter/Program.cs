@@ -5,7 +5,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using Gtc.AssemblyApi.CodeAnalysis;
 using Gtc.AssemblyApi.IO;
-using Gtc.AssemblyApi.ModelBuilder;
+using Gtc.AssemblyApi.Model;
 
 namespace Gtc.AssemblyApi
 {

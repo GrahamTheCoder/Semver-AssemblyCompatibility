@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using Gtc.AssemblyApi.Comparison;
-using Gtc.AssemblyApi.ModelBuilder;
+using Gtc.AssemblyApi.Model;
 using Gtc.AssemblyApi.SemVer;
 using NUnit.Framework;
 

@@ -1,5 +1,4 @@
 ﻿using Gtc.AssemblyApi.Model;
-using Gtc.AssemblyApi.ModelBuilder;
 using Gtc.AssemblyApiTests.Builders;
 
 namespace Gtc.AssemblyApiTests

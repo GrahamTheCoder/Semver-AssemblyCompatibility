@@ -2,11 +2,10 @@ using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 using Gtc.AssemblyApi.Extensions;
-using Gtc.AssemblyApi.Model;
 using JetBrains.Annotations;
 using Newtonsoft.Json;
 
-namespace Gtc.AssemblyApi.ModelBuilder
+namespace Gtc.AssemblyApi.Model
 {
     internal sealed class ApiNode : IApiNode
     {

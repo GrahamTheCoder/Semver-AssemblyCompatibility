@@ -2,7 +2,7 @@
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
-using Gtc.AssemblyApi.ModelBuilder;
+using Gtc.AssemblyApi.Model;
 using JetBrains.Annotations;
 
 namespace Gtc.AssemblyApi.Comparison

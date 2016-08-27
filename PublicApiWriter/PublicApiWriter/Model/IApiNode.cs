@@ -1,7 +1,6 @@
 using System.Collections.Generic;
-using Gtc.AssemblyApi.Model;
 
-namespace Gtc.AssemblyApi.ModelBuilder
+namespace Gtc.AssemblyApi.Model
 {
     internal interface IApiNode
     {

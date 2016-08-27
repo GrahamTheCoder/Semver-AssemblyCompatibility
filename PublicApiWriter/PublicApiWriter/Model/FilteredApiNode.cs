@@ -1,9 +1,8 @@
 using System.Collections.Generic;
 using System.Linq;
 using Gtc.AssemblyApi.IO;
-using Gtc.AssemblyApi.Model;
 
-namespace Gtc.AssemblyApi.ModelBuilder
+namespace Gtc.AssemblyApi.Model
 {
     internal class FilteredApiNode : IApiNode
     {

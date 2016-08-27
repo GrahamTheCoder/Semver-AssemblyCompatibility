@@ -7,7 +7,7 @@ using Gtc.AssemblyApi;
 using Gtc.AssemblyApi.CodeAnalysis;
 using Gtc.AssemblyApi.Comparison;
 using Gtc.AssemblyApi.IO;
-using Gtc.AssemblyApi.ModelBuilder;
+using Gtc.AssemblyApi.Model;
 using Gtc.AssemblyApi.SemVer;
 using Gtc.AssemblyApiTests.Utils;
 using NUnit.Framework;

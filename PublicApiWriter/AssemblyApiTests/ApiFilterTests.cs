@@ -1,7 +1,6 @@
 ﻿using System.Linq;
 using Gtc.AssemblyApi.IO;
 using Gtc.AssemblyApi.Model;
-using Gtc.AssemblyApi.ModelBuilder;
 using Gtc.AssemblyApiTests.Builders;
 using NUnit.Framework;
 

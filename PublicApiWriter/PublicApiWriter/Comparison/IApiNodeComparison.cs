@@ -1,5 +1,5 @@
 ﻿using System.Collections.Generic;
-using Gtc.AssemblyApi.ModelBuilder;
+using Gtc.AssemblyApi.Model;
 
 namespace Gtc.AssemblyApi.Comparison
 {
