@@ -45,10 +45,12 @@ namespace Gtc.AssemblyApi.IO
 
         private async Task WriteMembersIndented(TextWriter file, CancellationToken cancellationToken, IOrderedEnumerable<IApiNode> orderedMembers)
         {
-            var indentedTextWriter = new IndentedTextWriter(file, " ") { Indent = 2 };
-            foreach (var member in orderedMembers)
+            using (var indentedTextWriter = new IndentedTextWriter(file, " ") {Indent = 2})
             {
-                await Write(member, indentedTextWriter, cancellationToken);
+                foreach (var member in orderedMembers)
+                {
+                    await Write(member, indentedTextWriter, cancellationToken);
+                }
             }
         }
 
