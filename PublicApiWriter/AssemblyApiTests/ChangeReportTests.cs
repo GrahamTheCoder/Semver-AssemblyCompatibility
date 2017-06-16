@@ -11,10 +11,8 @@ namespace Gtc.AssemblyApiTests
         [Test]
         public async Task UnchangingPartOfApiDoesNotAppearInComparison()
         {
-            var oldApi = ApiBuilder.CreateApi("1");
-            var newApi = ApiBuilder.CreateApi("2");
             var sameApi = ApiBuilder.CreateApi("same");
-            var comparison = ApiNodeComparison.Compare(new [] { sameApi, oldApi}, new [] { sameApi, newApi});
+            var comparison = ApiNodeComparison.Compare(new [] { sameApi, ApiBuilder.CreateApi("1")}, new [] { sameApi, ApiBuilder.CreateApi("2")});
             var differenceString = await comparison.GetDifferencesString();
 
             Assert.That(differenceString, Does.Not.Contain("same"));

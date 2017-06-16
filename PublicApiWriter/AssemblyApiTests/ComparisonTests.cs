@@ -44,13 +44,32 @@ namespace Gtc.AssemblyApiTests
         }
 
         [Test]
+        public void GivenCompatibleApiThenBuildVersionIncreases()
+        {
+            var oldApi = ApiBuilder.CreateApi("1");
+            var newApi = ApiBuilder.CreateApi("1");
+            var comparison = Compare(oldApi, newApi);
+
+            Assert.That(comparison.GetNewSemanticVersion(new Version(1, 0, 0, 0)).AssemblyFileVersion, Is.EqualTo(new Version(1, 0, 1, 0)));
+        }
+
+        [Test]
+        public void GivenAddititveApiChangeThenMinorVersionIncreases()
+        {
+            var oldApi = ApiBuilder.CreateApi("1");
+            var comparison = ApiNodeComparison.Compare(new[] { oldApi }, new[] { oldApi, ApiBuilder.CreateApi("") });
+
+            Assert.That(comparison.GetNewSemanticVersion(new Version(1, 0, 0, 0)).AssemblyFileVersion, Is.EqualTo(new Version(1, 1, 0, 0)));
+        }
+
+        [Test]
         public void GivenIncompatibleApiThenMajorVersionIncreases()
         {
             var oldApi = ApiBuilder.CreateApi("1");
             var newApi = ApiBuilder.CreateApi("2");
             var comparison = Compare(oldApi, newApi);
 
-            Assert.That(comparison.GetNewSemanticVersion(new Version(1,0,0,0)).AssemblyFileVersion.Major, Is.EqualTo(2));
+            Assert.That(comparison.GetNewSemanticVersion(new Version(1, 0, 0, 0)).AssemblyFileVersion, Is.EqualTo(new Version(2, 0, 0, 0)));
         }
 
 
