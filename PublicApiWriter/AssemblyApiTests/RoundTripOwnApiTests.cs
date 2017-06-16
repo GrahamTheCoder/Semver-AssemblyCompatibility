@@ -23,7 +23,7 @@ namespace Gtc.AssemblyApiTests
 
         public RoundTripOwnApiTests()
         {
-            var solutionDirectory = new DirectoryInfo(Environment.CurrentDirectory + @"\..\..\");
+            var solutionDirectory = new FileInfo(typeof(RoundTripOwnApiTests).Assembly.Location).Directory.Parent.Parent;
             m_ThisProjectFile = solutionDirectory.GetFiles("*.csproj").First();
             m_LazyThisProjectApi = new Lazy<IReadOnlyCollection<IApiNode>>(() => ApiReader.ReadApiFromProjects(m_ThisProjectFile.FullName, CancellationToken.None).Result);
             m_LazyRoundTrippedProjectApi = new Lazy<IReadOnlyCollection<IApiNode>>(() => RoundTripApi(ThisProjectApi));
