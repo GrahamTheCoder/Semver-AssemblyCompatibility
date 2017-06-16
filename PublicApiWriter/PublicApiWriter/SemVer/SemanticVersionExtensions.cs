@@ -4,6 +4,7 @@ namespace Gtc.AssemblyApi.SemVer
 {
     public static class SemanticVersionExtensions
     {
+        /// <remarks>The first 3 digits represent the SemVer - the last digit is always 0</remarks>
         public static Version GetNewSemanticVersion(this Version oldSemVer, BinaryApiCompatibility compatibility)
         {
             switch (compatibility)
@@ -13,7 +14,7 @@ namespace Gtc.AssemblyApi.SemVer
                 case BinaryApiCompatibility.BackwardsCompatible:
                     return WithMinorIncremented(oldSemVer);
                 case BinaryApiCompatibility.Incompatible:
-                    return new Version(oldSemVer.Major + 1, 0, 0);
+                    return new Version(oldSemVer.Major + 1, 0, 0, 0);
                 default:
                     throw new ArgumentOutOfRangeException(nameof(compatibility));
             }
@@ -27,13 +28,6 @@ namespace Gtc.AssemblyApi.SemVer
         public static Version WithBuildIncremented(this Version oldSemVer)
         {
             return new Version(oldSemVer.Major, oldSemVer.Minor, oldSemVer.Build + 1, 0);
-        }
-
-        public static Version WithAllPartsSet(this Version version)
-        {
-            return version == null
-                ? null
-                : new Version(version.Major, version.Minor, version.Build, version.Revision != -1 ? version.Revision : 0);
         }
     }
 }
