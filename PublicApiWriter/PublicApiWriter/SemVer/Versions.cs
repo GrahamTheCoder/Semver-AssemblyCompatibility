@@ -6,7 +6,7 @@ namespace Gtc.AssemblyApi.SemVer
     [DebuggerDisplay("{AssemblyFileVersion.ToString()}")]
     public class Versions
     {
-        public BinaryApiCompatibility Compatibility { get; private set; }
+        public BinaryApiCompatibility Compatibility { get; }
 
         public Versions(Version oldFileVersion, BinaryApiCompatibility compatibility)
         {
@@ -19,9 +19,9 @@ namespace Gtc.AssemblyApi.SemVer
             ExclusiveMaximumFileVersion = AssemblyFileVersion.WithMinorIncremented();
         }
 
-        public Version AssemblyFileVersion { get; private set; }
-        public Version AssemblyInformationalVersion { get; private set; }
-        public Version AssemblyVersion { get; private set; }
-        public Version ExclusiveMaximumFileVersion { get; private set; }
+        public Version AssemblyFileVersion { get; }
+        public Version AssemblyInformationalVersion { get; }
+        public Version AssemblyVersion { get; }
+        public Version ExclusiveMaximumFileVersion { get; }
     }
 }
