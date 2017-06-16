@@ -9,7 +9,7 @@ namespace Gtc.AssemblyApiTests
     class ChangeReportTests
     {
         [Test]
-        public async Task GivenIncompatibleApiThenMajorVersionIncreases()
+        public async Task UnchangingPartOfApiDoesNotAppearInComparison()
         {
             var oldApi = ApiBuilder.CreateApi("1");
             var newApi = ApiBuilder.CreateApi("2");
