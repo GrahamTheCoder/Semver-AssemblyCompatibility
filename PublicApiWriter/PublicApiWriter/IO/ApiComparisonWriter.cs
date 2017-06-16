@@ -8,7 +8,7 @@ using Gtc.AssemblyApi.Comparison;
 
 namespace Gtc.AssemblyApi.IO
 {
-    class ApiComparisonWriter
+    internal class ApiComparisonWriter
     {
         private readonly ApiNodeWriter m_ApiNodeWriter;
 

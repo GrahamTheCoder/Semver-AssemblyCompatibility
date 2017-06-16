@@ -15,7 +15,7 @@ namespace Gtc.AssemblyApi.SemVer
                 case BinaryApiCompatibility.Incompatible:
                     return new Version(oldSemVer.Major + 1, 0, 0);
                 default:
-                    throw new ArgumentOutOfRangeException("compatibility");
+                    throw new ArgumentOutOfRangeException(nameof(compatibility));
             }
         }
 

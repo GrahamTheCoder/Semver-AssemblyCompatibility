@@ -19,35 +19,17 @@ namespace Gtc.AssemblyApi.Comparison
             get { return m_ApiNodeComparison.MemberComparison.Where(n => n.IsDifferent).Select(n => new DifferentOnlyApiNodeComparison(n)).ToArray(); }
         }
 
-        public override IApiNode OldApiNode
-        {
-            get { return m_ApiNodeComparison.OldApiNode; }
-        }
+        public override IApiNode OldApiNode => m_ApiNodeComparison.OldApiNode;
 
-        public override IApiNode NewApiNode
-        {
-            get { return m_ApiNodeComparison.NewApiNode; }
-        }
+        public override IApiNode NewApiNode => m_ApiNodeComparison.NewApiNode;
 
-        public override SignatureDifferenceType SignatureDifferenceType
-        {
-            get { return m_ApiNodeComparison.SignatureDifferenceType; }
-        }
+        public override SignatureDifferenceType SignatureDifferenceType => m_ApiNodeComparison.SignatureDifferenceType;
 
-        public bool IsDifferent
-        {
-            get { return m_ApiNodeComparison.IsDifferent; }
-        }
+        public bool IsDifferent => m_ApiNodeComparison.IsDifferent;
 
-        public string Name
-        {
-            get { return m_ApiNodeComparison.Name; }
-        }
+        public string Name => m_ApiNodeComparison.Name;
 
-        public string Signature
-        {
-            get { return m_ApiNodeComparison.Signature; }
-        }
+        public string Signature => m_ApiNodeComparison.Signature;
 
         public override string ToString()
         {

@@ -21,7 +21,7 @@ namespace Gtc.AssemblyApi.CodeAnalysis
             {"SemanticAnalysisOnly", "true"},
         };
 
-        private static readonly MsSymbolKind[] NonApiSymbolKinds = { MsSymbolKind.Alias , MsSymbolKind.Preprocessing, MsSymbolKind.Label};
+        private static readonly MsSymbolKind[] s_NonApiSymbolKinds = { MsSymbolKind.Alias , MsSymbolKind.Preprocessing, MsSymbolKind.Label};
 
         public ApiReader(IEnumerable<Project> projects)
         {
@@ -73,7 +73,7 @@ namespace Gtc.AssemblyApi.CodeAnalysis
                 var semanticDocumentMembers = classes
                     .Select(syntaxNode => semantic.GetDeclaredSymbol(syntaxNode))
                     .Where(symbol => symbol != null);
-                foreach (var semanticDocSymbol in semanticDocumentMembers.Where(m => !NonApiSymbolKinds.Contains(m.Kind)))
+                foreach (var semanticDocSymbol in semanticDocumentMembers.Where(m => !s_NonApiSymbolKinds.Contains(m.Kind)))
                 {
                     CreateApiNode(assemblyNode, semanticDocSymbol, cancellationToken);
                 }

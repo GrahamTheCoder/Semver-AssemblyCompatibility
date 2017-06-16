@@ -32,40 +32,19 @@ namespace Gtc.AssemblyApi.Model
             }
         }
 
-        public long Importance
-        {
-            get { return m_ApiNodeImplementation.Importance; }
-        }
+        public long Importance => m_ApiNodeImplementation.Importance;
 
-        public SymbolKind Kind
-        {
-            get { return m_ApiNodeImplementation.Kind; }
-        }
+        public SymbolKind Kind => m_ApiNodeImplementation.Kind;
 
-        public string Name
-        {
-            get { return m_ApiNodeImplementation.Name; }
-        }
+        public string Name => m_ApiNodeImplementation.Name;
 
-        public string Namespace
-        {
-            get { return m_ApiNodeImplementation.Namespace; }
-        }
+        public string Namespace => m_ApiNodeImplementation.Namespace;
 
-        public string Signature
-        {
-            get { return m_ApiNodeImplementation.Signature; }
-        }
+        public string Signature => m_ApiNodeImplementation.Signature;
 
-        public Accessibility SymbolAccessibility
-        {
-            get { return m_ApiNodeImplementation.SymbolAccessibility; }
-        }
+        public Accessibility SymbolAccessibility => m_ApiNodeImplementation.SymbolAccessibility;
 
-        public Dictionary<string, List<string>> Attributes
-        {
-            get { return m_ApiNodeImplementation.Attributes; }
-        }
+        public Dictionary<string, List<string>> Attributes => m_ApiNodeImplementation.Attributes;
 
         public static IEnumerable<IApiNode> For(PrinterConfig printerConfig, IEnumerable<IApiNode> solutionNodes)
         {
