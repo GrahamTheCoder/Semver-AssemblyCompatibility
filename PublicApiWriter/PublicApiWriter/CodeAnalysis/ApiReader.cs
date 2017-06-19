@@ -86,10 +86,20 @@ namespace Gtc.AssemblyApi.CodeAnalysis
             string signature = symbol.GetSignature();
             var memberImportance = symbol.GetImportance();
             var presentedAccessibility = GetPresentedAccessibility(symbol);
-            var attributes = symbol.GetAttributes().ToLookup(a => a.AttributeClass.Name, a => string.Join(", ", a.ConstructorArguments.Select(x => x.Value.ToString())));
+            var attributes = symbol.GetAttributes().ToLookup(ClassNameEndingInAttribute, a => string.Join(", ", a.ConstructorArguments.Select(x => x.Value.ToString())));
             var apiNode = parentNode.AddMember(signature, symbolNamespace, presentedAccessibility, GetPresentedKind(symbol), symbol.Name, attributes, memberImportance);
             AddMembers(apiNode, symbol, cancellationToken);
             return apiNode;
+        }
+
+        /// <remarks>
+        /// For some reason, the Attribute suffix is sometimes missing - possibly older versions of Roslyn, or failing to resolve the source of the attribute.
+        /// It should always be there according to https://stackoverflow.com/a/5514433/1128762
+        /// </remarks>
+        private static string ClassNameEndingInAttribute(AttributeData a)
+        {
+            string name = a.AttributeClass.Name;
+            return name.EndsWith("Attribute") ? name : name + "Attribute";
         }
 
         private static SymbolKind GetPresentedKind(ISymbol symbol)

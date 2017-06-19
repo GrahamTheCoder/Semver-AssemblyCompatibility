@@ -134,16 +134,16 @@ namespace Gtc.AssemblyApiTests
         }
 
         [Test]
-        public void ThisTestAttributeFound()
+        public void ThisTestAttributeHasFullAttributeName()
         {
                 var api = ThisProjectApi;
 
                 var thisTest = api.First().Members
                     .First(m => m.Name == nameof(AssemblyApiTests)).Members
                     .First(m => m.Name == nameof(RoundTripOwnApiTests)).Members
-                    .First(m => m.Name == nameof(ThisTestAttributeFound));
+                    .First(m => m.Name == nameof(ThisTestAttributeHasFullAttributeName));
 
-                Assert.That(thisTest.Attributes.Keys, Contains.Item(nameof(TestAttribute)));
+                Assert.That(thisTest.Attributes.Keys, Contains.Item(nameof(TestAttribute)), "Should always have 'Attribute' appended to the attribute class name according to https://stackoverflow.com/a/5514433/1128762");
         }
 
         private static void RunMain(FileInfo solution, FileInfo humanReadableFile, FileInfo computerReadableFile, string inclusionRegexes, string exclusionRegexes)
