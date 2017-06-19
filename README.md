@@ -1,4 +1,4 @@
-# Semver-AssemblyCompatibility
+# Semver-AssemblyCompatibility [![Build status](https://ci.appveyor.com/api/projects/status/6idiw5cwjds4qti5/branch/master?svg=true)](https://ci.appveyor.com/project/GrahamTheCoder/semver-assemblycompatibility/branch/master)
 Helps treat assembly compatibility as a semantically versioned interface. This is useful for long nuget dependency chains caused by poor architecture decisions. An idea of the rationale behind this: https://grahamthecoder.wordpress.com/2014/12/10/whats-in-a-strong-name/
 
 The intention is to have something which masquerades as a unit test in your project which is always validating the API against a known version. Optionally it could also update the version number when it's incorrect.
