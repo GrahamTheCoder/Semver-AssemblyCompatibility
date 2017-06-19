@@ -24,7 +24,8 @@ namespace Gtc.AssemblyApiTests
         public RoundTripOwnApiTests()
         {
             var solutionDirectory = new FileInfo(typeof(RoundTripOwnApiTests).Assembly.Location).Directory.Parent.Parent;
-            m_ThisProjectFile = solutionDirectory.GetFiles("*.csproj").First();
+            m_ThisProjectFile = solutionDirectory.GetFiles("*.csproj").FirstOrDefault();
+            if (m_ThisProjectFile == null) Assert.Inconclusive("Test runner can't access csproj");
             m_LazyThisProjectApi = new Lazy<IReadOnlyCollection<IApiNode>>(() => ApiReader.ReadApiFromProjects(m_ThisProjectFile.FullName, CancellationToken.None).Result);
             m_LazyRoundTrippedProjectApi = new Lazy<IReadOnlyCollection<IApiNode>>(() => RoundTripApi(ThisProjectApi));
         }
