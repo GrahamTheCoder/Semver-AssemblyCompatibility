@@ -1,9 +1,14 @@
 # Semver-AssemblyCompatibility
 Helps treat assembly compatibility as a semantically versioned interface. This is useful for long nuget dependency chains caused by poor architecture decisions. An idea of the rationale behind this: https://grahamthecoder.wordpress.com/2014/12/10/whats-in-a-strong-name/
 
-I have a powershell script which does a post-build check for this system on [Codeplex](https://hg.codeplex.com/forks/grahamhelliwell/diffonly). I'm essentially porting that system to Roslyn then extending it.
+The intention is to have something which masquerades as a unit test in your project which is always validating the API against a known version. Optionally it could also update the version number when it's incorrect.
 
-Note that many changes *could* end up being a breaking change under various circumstances in a consuming project. This project aims to hit:
+Since SemVer only uses 3 parts of the version number, the build number can be set separately. I recommend just increment as far as possible then reset.
+
+## Details
+I have an existing powershell script which does a post-build check for this system on [Codeplex](https://hg.codeplex.com/forks/grahamhelliwell/diffonly). I'm essentially porting that system to Roslyn then extending it.
+
+Many changes *could* end up being a breaking change under various circumstances in a consuming project. This project aims to hit:
 * All cases that are guaranteed to break a consumer (e.g. removing a type that's used)
 * Zero of the cases where the consumer was using reflection to break accessibility rules
 
@@ -14,12 +19,10 @@ Note that many changes *could* end up being a breaking change under various circ
   * [x] Events
   * [x] Delegates
   * [x] Base type and interface info
-* [ ] Generate a semantic version based on (the latest public API, its verison, and an unversioned public API)
+* [x] Generate a semantic version based on (the latest public API, its verison, and an unversioned public API)
 * [ ] Generate a semantic version from a nuspec (by finding the included projects and versioning their APIs together)
-* [ ] Create a unit test to run locally which writes out the version to AssemblyInfo and Nuspec
-* [ ] Write guidance on setting up TeamCity to replace just build counter
-* [ ] Include powershell script to replace build counter on an arbitrary build system
-* [ ] Store something on GitHub, TC, the repo or Nuget to allow build counters to work on a per branch basis
+* [ ] Create a public method that writes out a JSON file containing version and API
+* [ ] Include example powershell script and unit test which call the above method and make use of the version to update assembly infos and nuspecs
 
 #### Future ideas
 ##### Provide other version inputs and/or make inputs pluggable
