@@ -1,10 +1,8 @@
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Gtc.AssemblyApi.Model;
-using JetBrains.Annotations;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.MSBuild;
 using Accessibility = Gtc.AssemblyApi.Model.Accessibility;
@@ -14,10 +12,8 @@ using MsSymbolKind = Microsoft.CodeAnalysis.SymbolKind;
 
 namespace Gtc.AssemblyApi.CodeAnalysis
 {
-    internal class ApiReader
+    internal partial class ApiReader
     {
-        [UsedImplicitly] //MSBuild for consuming projects won't copy the C# dll otherwise and hence won't be able to load csprojs https://stackoverflow.com/a/38668082/1128762
-        private static Type s_ForceAssemblyReferenceRequiredAtRuntime = typeof(Microsoft.CodeAnalysis.CSharp.Formatting.CSharpFormattingOptions);
         private readonly IEnumerable<Project> m_Projects;
         private static readonly Dictionary<string, string> s_DefaultProperties = new Dictionary<string, string>
         {

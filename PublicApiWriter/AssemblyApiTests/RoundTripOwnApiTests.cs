@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Reflection;
 using System.Threading;
 using Gtc.AssemblyApi;
 using Gtc.AssemblyApi.CodeAnalysis;
@@ -26,8 +27,25 @@ namespace Gtc.AssemblyApiTests
             var solutionDirectory = new FileInfo(typeof(RoundTripOwnApiTests).Assembly.Location).Directory.Parent.Parent;
             m_ThisProjectFile = solutionDirectory.GetFiles("*.csproj").FirstOrDefault();
             if (m_ThisProjectFile == null) Assert.Inconclusive("Test runner can't access csproj");
-            m_LazyThisProjectApi = new Lazy<IReadOnlyCollection<IApiNode>>(() => ApiReader.ReadApiFromProjects(m_ThisProjectFile.FullName, CancellationToken.None).Result);
+            m_LazyThisProjectApi = new Lazy<IReadOnlyCollection<IApiNode>>(ReadApi);
             m_LazyRoundTrippedProjectApi = new Lazy<IReadOnlyCollection<IApiNode>>(() => RoundTripApi(ThisProjectApi));
+        }
+
+        private IReadOnlyCollection<IApiNode> ReadApi()
+        {
+            try
+            {
+                return ApiReader.ReadApiFromProjects(m_ThisProjectFile.FullName, CancellationToken.None).GetAwaiter()
+                    .GetResult();
+            }
+            catch (ReflectionTypeLoadException typeLoadException) when (typeLoadException.LoaderExceptions.Any())
+            {
+                string message = typeLoadException.Message + "\r\nLoaderExceptions:\r\n" +
+                                 string.Join("\r\n", typeLoadException.LoaderExceptions.Select(x => x.Message));
+                throw new ReflectionTypeLoadException(typeLoadException.Types, typeLoadException.LoaderExceptions,
+                    message);
+
+            }
         }
 
         private IReadOnlyCollection<IApiNode> ThisProjectApi => m_LazyThisProjectApi.Value;
